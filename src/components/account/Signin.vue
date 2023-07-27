@@ -19,9 +19,7 @@
                         Password non valida.
                         </div>
                     </div>
-                    <div id="passwordHelpBlock" class="form-text">
-                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
-                    </div>
+                   
             </div>
             
             <div class="alert alert-danger mt-6 text-center" role="alert" v-if="error"> 
@@ -38,18 +36,14 @@
 
 <script setup>
 
-import { reactive,computed,ref } from 'vue';
+import { reactive,computed } from 'vue';
 import useUser from '@/composables/user.composable'
 
     
     const userChanged=defineEmits(['userchanged'])
-    const {loginUser,user, error, working}=useUser()
-    import { useRouter } from 'vue-router';
-
-    const router=useRouter()
-    
+    const {signIn, error, working}=useUser()
+        
     const form=reactive({"email":"","password":""})
-    
     const blur=reactive({"email":false,"password":false})
     
 
@@ -60,22 +54,7 @@ import useUser from '@/composables/user.composable'
   
 
     const validPassword=computed(()=>{
-        let password=form.password
-        const badLength=password.length<8 || password.length>20
-        if(badLength) return false
-        const regex_letters=/\w+/g
-        const regex_digit=/\d+/g
-        const regex_special=/^[\w&.-]+$/
-       
-        if(!regex_letters.test(password) || !regex_digit.test(password))
-        {
-            return false
-        }
-
-        if(!regex_special.test(password)){
-            return false
-        }
-
+              
         return true
     })
 
@@ -86,9 +65,7 @@ import useUser from '@/composables/user.composable'
         } 
 
        
-        loginUser(form).then(_=>{
-            router.push({name:'home.index'})
-        })
+        signIn(form)
         
     }
 </script>

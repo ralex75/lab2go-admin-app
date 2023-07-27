@@ -61,7 +61,7 @@
     import RequestNotes from './RequestNotes.vue'
     import data from '@/assets/regioni.json' 
     import Popup from '../Popup.vue'
-    import userHelper from '@/composables/user.helper'
+    import useUser from '@/composables/user.composable'
     
     import { ref, onMounted, shallowRef } from 'vue'
 
@@ -69,7 +69,7 @@
         name:'RequestIndex',
         setup(){
             
-            const {isAdmin}=userHelper()
+            const {isAdmin}=useUser()
             const {requests,getRequests} = useRequest()
             const filteredRequests=ref([])
             const filterChanged=ref(false)

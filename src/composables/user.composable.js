@@ -4,11 +4,10 @@ import {useRouter}  from "vue-router"
 import storage from "./storage"
 
 
-export const user=ref(null)
+const user=ref(null)
 
 export default function useUser(){
     
-    //const user=ref(null)  
     const error=ref("")  
     const router=useRouter()
     const STORAGE_KEY="session"
@@ -16,6 +15,7 @@ export default function useUser(){
     const users=ref([])
     
     const currentUser=()=>{
+     
         let cu=storage.get(STORAGE_KEY)
         user.value=cu || null
     }
@@ -28,7 +28,7 @@ export default function useUser(){
         return user.value!=null
     })
 
-    const registerUser=async ({name,surname,email,password})=>{
+    const signUp=async ({name,surname,email,password})=>{
         try{
            
             await axios.post("/user/create",{name,surname,email,password})
@@ -41,27 +41,26 @@ export default function useUser(){
         }
     }
 
-    const loginUser=async ({email,password})=>{
+    const signIn=async ({email,password})=>{
         
             try{
                 working.value=true
                 let {data}=await axios.post("/user/login",{email,password})
                 storage.set(STORAGE_KEY,data.user)
                 user.value=data.user
-                //router.push({name:'home.index'})
+                router.push({name:'home.index'})
             }
             catch(exc){
                 error.value="Credenziali non valide."
-                throw exc
+                console.log(exc)
             }
             finally{
                 working.value=false
             }
-
-       
+     
     }
 
-    const logoutUser=async ()=>{
+    const signOut=async ()=>{
         await axios.post("/user/logout").finally(_=>{
             storage.unset(STORAGE_KEY)
             user.value=null
@@ -77,12 +76,12 @@ export default function useUser(){
        error,
        working,
        currentUser,
-       registerUser,
-       loginUser,
-       logoutUser,
+       signUp,
+       signIn,
+       signOut,
        isAdmin,
        isLoggedIn
-      
-      
     }
 }
+
+

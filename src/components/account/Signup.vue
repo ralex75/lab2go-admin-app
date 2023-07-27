@@ -66,10 +66,8 @@
 
 import { reactive,computed } from 'vue';
 import useUser from '@/composables/user.composable'
-import { useRouter } from 'vue-router';
-
-    const router=useRouter()
-    const {registerUser,error}=useUser()
+    
+    const {signUp,error}=useUser()
     const form=reactive({"name":"", "surname":"","email":"","password":"","confirmPassword":""})
     
     const blur=reactive({"name":"","surname":"","email":false,"password":false,"confirm":false})
@@ -119,10 +117,7 @@ import { useRouter } from 'vue-router';
             return console.log("Invalid")
         } 
 
-        registerUser(form).then(_=>{
-            router.push({name:'home.index'})
-        })
-        
+        signUp(form)
     }
 </script>
 

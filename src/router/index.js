@@ -4,20 +4,11 @@ import AboutView from '../views/AboutView.vue'
 import useUser from '../composables/user.composable'
 import storage from '../composables/storage'
 
-/*import SchoolIndex from '../components/school/SchoolIndex'
-import CreateSchool from '@/components/school/SchoolCreate'
-import EditSchool from '@/components/school/SchoolEdit'
-import SchoolDetails from '@/components/school/SchoolDetails'
-import StudentCreate from '@/components/students/StudentCreate'
-import RequestEdit from '@/components/request/RequestEdit'
-import storage from '@/composables/storage'
-import userHelper from '@/composables/user.helper'*/
-
 const routeGuard=(to, from, next)=>{
   
-  let excludeRoutes=['login.index','signup.index','home.index']
+  //let excludeRoutes=['login.index','signup.index','home.index']
   
-  if(!excludeRoutes.some(r=>r==to.name))
+  /*if(!excludeRoutes.some(r=>r==to.name))
   {
     let isAuthenticated= storage.get("session") ? true : false
 
@@ -25,14 +16,19 @@ const routeGuard=(to, from, next)=>{
     {
       return next('/login'); //go to '/login';
     }
-  } 
+  } */
+
+  let user=storage.get("session")
+  let routeRoles=to.meta.roles || []
+  const allowAccess = routeRoles.length==0 || (user && routeRoles.some(r=>user.role.toLowerCase().indexOf(r)>-1))
+  if(!allowAccess){
+    return next('/login'); //go to '/login';
+  }
  
   next(); //enter into the route
   
 }
 
-
-const {isAdmin}=useUser()
 
 
 const routes = [
@@ -41,56 +37,81 @@ const routes = [
     name: 'home.index',
     component: HomeView,
     meta: {
-      title: "Home Page",
-      subtitle: "",
-      description:"home page"
+      page:{
+        name:"Home",
+        title: "Home Page",
+        subtitle: "",
+        description:"home page"
+      },
+      
    },
   },
   {
     path:'/signup',
     name:'signup.index',
-    component: ()=>import('@/components/Signup.vue'),
+    component: ()=>import('@/components/account/Signup.vue'),
     meta: {
-      title: "Registrazione",
-      subtitle: "",
+      page:{
+        name:"Registrati",
+        title: "Registrazione",
+        subtitle: "",
+      }
+
    },
   },
   {
     path:'/login',
     name:'login.index',
-    component: ()=>import('@/components/Login.vue'),
+    component: ()=>import('@/components/account/Signin.vue'),
     meta: {
-      title: "Accedi",
-      subtitle: "",
+      page:{
+        name:"Accedi",
+        title: "Accedi",
+        subtitle: "",
+      }
    },
   },
   {
     path:'/logout',
     name:'logout.index',
-    component: ()=>import('@/components/Logout.vue') 
+    component: ()=>import('@/components/account/Signout.vue'),
+    meta: {
+      page:{
+        name:"Logout",
+      },
+      
+   },
   },
-  {
+  /*{
     path:'/accounts',
     name:'useraccount.index',
     component: ()=>import('@/components/UserAccount.vue'),
     meta: {
-      title: "Lista account",
-      subtitle: "",
+        page:{
+        title: "Lista account",
+        subtitle: "",
+      },
+      roles:['docente']
    },
-  },
+   
+  },*/
   {
     path: '/requests',
     name: 'requests.index',
     component: ()=>import('@/components/request/RequestIndex.vue'),
     meta: {
-     
-        title: "Richieste",
-        subtitle:"",
-        description:"lista delle richieste"
+        page:{
+          name:"Richieste",
+          title: "Richieste",
+          subtitle:"",
+          description:"lista delle richieste"
+        },
+        roles:["docente"]
+
      
     }
   },
-  {
+  /*{
     path: '/requests/add',
     name: 'requests.add',
     component: ()=>import('@/components/request/user/RequestAdd.vue'),
@@ -101,7 +122,7 @@ const routes = [
         description:""
      
     }
-  },
+  },*/
   
   { path: '/:pathMatch(.*)*', redirect: '/' },
   

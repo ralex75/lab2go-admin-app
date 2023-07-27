@@ -2,8 +2,7 @@
 export default {
     get:(key)=>{
         let d=localStorage.getItem(key)
-        if(d) return JSON.parse(d)
-        return null
+        return d ? JSON.parse(d) : null
     },
     set:(key,value)=>{
         localStorage.setItem(key,JSON.stringify(value))

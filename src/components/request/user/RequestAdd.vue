@@ -119,9 +119,9 @@
 import { reactive,ref,computed } from 'vue';
 import schoolHelper from '@/composables/school.helper.js'
 import requestHelper from '@/composables/request.helper.js'
-import userHelper from '@/composables/user.helper';
+import useUser from '@/composables/user.composable';
 
-const {user}=userHelper()
+const {user}=useUser()
 const {getSchoolInfo, schools, working}=schoolHelper()
 const {saveRequest,error}=requestHelper()
 let schoolForm=reactive({"code":""})

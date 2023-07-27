@@ -9,8 +9,8 @@ import { onMounted } from 'vue'
 import useUser from '@/composables/user.composable'
 
 
-const {logoutUser,user}=useUser()
+const {signOut,user}=useUser()
 
-onMounted(logoutUser)
+onMounted(signOut)
 
 </script>

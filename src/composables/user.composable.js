@@ -36,32 +36,29 @@ export default function useUser(){
         }
         catch(exc){
             let msg=(exc.type && exc.type=="duplicated") ? "Utente già registrato.": "Errore generico"
-          
             error.value=msg
+            throw exc
         }
     }
 
     const loginUser=async ({email,password})=>{
-        try{
+        
             try{
                 working.value=true
                 let {data}=await axios.post("/user/login",{email,password})
                 storage.set(STORAGE_KEY,data.user)
                 user.value=data.user
-                router.push({name:'home.index'})
+                //router.push({name:'home.index'})
             }
             catch(exc){
                 error.value="Credenziali non valide."
+                throw exc
             }
             finally{
                 working.value=false
             }
 
-        }
-        catch(exc){
-            console.log(exc)
-            error.value=exc.response.data
-        }
+       
     }
 
     const logoutUser=async ()=>{

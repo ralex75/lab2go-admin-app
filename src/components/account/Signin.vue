@@ -14,7 +14,7 @@
                   
                     <label for="inputPassword" class="form-label">Password </label>
                     <div class="input-group has-validation">
-                        <input type="password" required="true" max-lenght="20" min-length="8" v-model="form.password" id="inputPassword" :class="{'form-control':true, 'is-invalid' : (!validPassword && blur.password) || error, 'is-valid':validPassword}" @keydown="error=''" @blur="blur.password=true" class="form-control">
+                        <input type="password" required="true" max-lenght="20" min-length="8" v-model="form.password" id="inputPassword" :class="{'form-control':true, 'is-invalid' : (!validPassword && blur.password) || error}" @keydown="error=''" @blur="blur.password=true" class="form-control">
                         <div :class="{'invalid-feedback':!validPassword,'hide':validPassword}">
                         Password non valida.
                         </div>

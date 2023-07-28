@@ -6,18 +6,7 @@ import storage from '../composables/storage'
 
 const routeGuard=(to, from, next)=>{
   
-  //let excludeRoutes=['login.index','signup.index','home.index']
-  
-  /*if(!excludeRoutes.some(r=>r==to.name))
-  {
-    let isAuthenticated= storage.get("session") ? true : false
-
-    if(!isAuthenticated) 
-    {
-      return next('/login'); //go to '/login';
-    }
-  } */
-
+ 
   let user=storage.get("session")
   let routeRoles=to.meta.roles || []
   const allowAccess = routeRoles.length==0 || (user && routeRoles.some(r=>user.role.toLowerCase().indexOf(r)>-1))
@@ -98,7 +87,7 @@ const routes = [
   {
     path: '/requests',
     name: 'requests.index',
-    component: ()=>import('@/components/request/RequestIndex.vue'),
+    component: ()=>import('@/components/Requests.vue'),
     meta: {
         page:{
           name:"Richieste",

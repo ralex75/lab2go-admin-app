@@ -15,11 +15,8 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="4" style="font-weight: normal;" >
-                    <router-link class="nav-link" to="/requests/add"><font-awesome-icon :icon="['fa', 'plus']" size="2xl" style="color:dodgerblue" /> Nuova Richiesta</router-link>
-                </th>
-                <th colspan="4" style="text-align: right;">
-                    <h6 v-if="requests.length>0">Numero di richieste attuali: <b>{{ requests.length }}</b></h6>
+                <th colspan="8" style="text-align: left;">
+                    <h6>Numero di richieste attuali: <b>{{ requests.length }}</b></h6>
                 </th>
             </tr>
             <tr>
@@ -43,8 +40,7 @@
                 <td><span v-html="formatDiscipline(r.disci_accepted)"></span></td>
                 <td>{{ r.status }}</td>
                 <td class="action">
-                    <span style="color:green"><font-awesome-icon icon="fa-solid fa-eye" title="visualizza richiesta" @click="showPopup(r,'REQUEST')" /></span>
-                    <span v-if="r.user_json_data.notes" style="color:dodgerblue"><font-awesome-icon icon="fa-solid fa-info-circle" title="mostra note" @click="showPopup(r.user_json_data.notes,'NOTES')"  /></span>
+                    <a href="" @click.prevent="showPopup(r,'REQUEST')">Gestisci</a>
                 </td>
             </tr>
         </tbody>
@@ -54,13 +50,10 @@
 
 <script>
     import useRequest from '@/composables/request.helper'
-    import DisplaySchool from './DisplaySchool.vue'
-    import DisplayUser from './DisplayUser.vue'
-    import RequestFilter from './RequestFilter.vue'
     import RequestEdit from './RequestEdit.vue'
-    import RequestNotes from './RequestNotes.vue'
+   
     import data from '@/assets/regioni.json' 
-    import Popup from '../Popup.vue'
+    import Popup from '@/components/Popup.vue'
     import useUser from '@/composables/user.composable'
     
     import { ref, onMounted, shallowRef } from 'vue'
@@ -69,19 +62,14 @@
         name:'RequestIndex',
         setup(){
             
-            const {isAdmin}=useUser()
+          
             const {requests,getRequests} = useRequest()
             const filteredRequests=ref([])
-            const filterChanged=ref(false)
             const selectedComponent=shallowRef(null)
-            const showFilter=ref(false)
-
             const regioni=data
-            onMounted(()=>{
-                
-                //solo amministratore può vedere tutte le richieste
-                if(!isAdmin.value) return
 
+            onMounted(()=>{
+              
                 getRequests().then(_=>{
                     filteredRequests.value=Object.assign(requests.value)
                 })
@@ -127,8 +115,7 @@
 
            
             const showPopup=(args,type)=>{
-                let cmp={"NOTES":RequestNotes,"REQUEST":RequestEdit}
-               
+                let cmp={"NOTES":"","REQUEST":RequestEdit}
                 selectedComponent.value={'cmp':cmp[type],args}
             }
 
@@ -146,19 +133,15 @@
             return {
                 requests,
                 filteredRequests,
-                filterChanged,
-                isAdmin,
                 showPopup,
                 closePopup,
                 selectedComponent,
                 parseZone,
                 formatDiscipline,
-                applyFilter,
-                showFilter,
                 updatedRequest
             }
         },
-        components:{DisplaySchool,DisplayUser,Popup,RequestFilter,RequestEdit,RequestNotes}
+        components:{Popup,RequestEdit}
        
     }
 </script>

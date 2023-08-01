@@ -32,7 +32,6 @@
             <div class="separator"></div>
             <div style="width:100%;">
             <h2>Richiedente</h2>
-            {{ usr_data }}
             <br>
             <div class="form-group large">
                 <label>Nome</label>
@@ -54,10 +53,11 @@
             
             <div>
                 <label>Discipline (in ordine di preferenza)</label>
-                
+              
                 <section class="discipline" v-for="(d,index) in discipline" :key="index">
                     
                     <input type="checkbox" v-model="disci_accepted" :value="d" />
+                    
                     <label for="checkbox">{{ d }}</label>
                     
                 </section>
@@ -71,7 +71,8 @@
 <div class="d-flex align-items-center justify-content-center">
     <div class="col-md-6" v-if="isAdmin">
         <div v-if="request.status!='DISCARDEDS'" class="d-grid gap-2 ">
-            <input type="button" @click="restoreRequest()" :disabled="request.status=='SUBMITTED'" class="mb-6 btn w-100 btn-lg btn-warning"  value="Ripristina" />
+          
+            <input type="button" @click="restoreRequest()" :disabled="request.status=='SUBMITTED'" class="mb-6 btn w-100 btn-lg" :class="{'btn-warning':request.status!='SUBMITTED'}"  value="Ripristina" />
             <input type="button" @click="acceptRequest()" :disabled="!disci_accepted.length" class="mb-6 btn w-100 btn-lg" :class="{'btn-primary':disci_accepted.length}" value="Accetta" />
             <input type="button" @click="rejectRequest()" class="btn w-100  btn-lg btn-danger" value="Rifiuta"  />
         </div>
@@ -86,7 +87,7 @@ import useRequest  from '@/composables/request.helper'
 import useUser from '@/composables/user.composable';
 
 const props=defineProps(['args'])
-const {updateRequest}=useRequest()
+const {saveRequest}=useRequest()
 const {isAdmin}=useUser()
 
 const request=props.args
@@ -114,11 +115,8 @@ const doUpdateRequest=async(status="UNDEFINED")=>{
     try {
         
         let {id,user_json_data,disci_accepted}=requestCpy
-        if(status=='REJECTED' || status=='SUBMITTED'){ disci_accepted=[]}
-        await updateRequest(id,user_json_data,disci_accepted,status)
-        requestCpy.status=status
-        requestCpy.disci_accepted=disci_accepted
-        emit('updatedRequest',requestCpy)
+        let ureq=await saveRequest(id,user_json_data,disci_accepted,status)
+        emit('updatedRequest',ureq)
     }
     catch(exc){
         throw exc
@@ -152,6 +150,24 @@ const rejectRequest=()=>{
     doUpdateRequest('REJECTED')
 
 }
+
+const dataIsChanged=computed(()=>{
+    
+    const src_usr_data=request.user_json_data
+
+    console.log(disci_accepted.value)
+    console.log(usr_data.discipline)
+    //JSON.stringify(disci_accepted.value)!=JSON.stringify(usr_data.discipline)) return true
+    //if(disci_accepted.lenght > !usr_data.discipline[0]) return false
+   
+    for(let k in usr_data){
+        if(JSON.stringify(usr_data[k])!=JSON.stringify(src_usr_data[k])) 
+        {   
+            return true
+        }
+    }
+    return false
+})
 
 </script>
 

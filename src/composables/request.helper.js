@@ -48,10 +48,12 @@ export default function requestHelper(){
     const saveRequest=async (rid, usr_data={},disci_accepted=[], status="UNDEFINED")=>{
 
         try{
-            console.log("UserDATA:",usr_data)
+           
             if(status=='REJECTED' || status=='SUBMITTED'){ disci_accepted=[]}
-            let {data}= await axios.put(`/requests/${rid}/update`,{usr_data, disci_accepted, status}) 
-            return data.request
+            
+            let {data}=await axios.put(`/requests/${rid}/update`,{usr_data, disci_accepted, status}) 
+          
+            return data
         }
         catch(exc){
             errors.value.push(exc)

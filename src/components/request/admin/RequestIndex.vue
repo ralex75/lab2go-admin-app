@@ -1,7 +1,5 @@
 <template>
     
-    
-
     <Popup v-if="selectedComponent" @close-popup="closePopup()">
         <component :is="selectedComponent.cmp" :args="selectedComponent.args" @updated-request="updatedRequest" @close-popup="closePopup()"></component>
     </Popup>
@@ -64,11 +62,9 @@
 
 <script>
     import useRequest from '@/composables/request.helper'
-    import DisplaySchool from './DisplaySchool.vue'
-    import DisplayUser from './DisplayUser.vue'
-    import RequestFilter from './RequestFilter.vue'
+    import RequestFilter from '@/components/request/RequestFilter.vue'
     import RequestEdit from './RequestEdit.vue'
-    import RequestNotes from './RequestNotes.vue'
+    import RequestNotes from '@/components/request/RequestNotes.vue'
     import data from '@/assets/regioni.json' 
     import Popup from '@/components/Popup.vue'
     import useUser from '@/composables/user.composable'
@@ -128,7 +124,6 @@
             }
 
             const formatDiscipline=(discipline)=>{
-                
                 return discipline?.length > 0  ? "<ul class='discipline'>"+discipline.map(d=>`<li>${d}</li>`).join("")+"</ul>" : 'Nessuna'
             }
 
@@ -145,8 +140,11 @@
 
             const updatedRequest=(ureq)=>{
                 
-                let idx=requests.value.findIndex(r=>r.id==ureq.id)
-                requests.value[idx]=ureq
+                let req=requests.value.find(r=>r.id==ureq.id)
+                req.user_json_data=JSON.parse(ureq.user_json_data)
+                req.disci_accepted=JSON.parse(ureq.disci_accepted)
+                req.status=ureq.status
+                //requests.value[idx]=req
                 closePopup()
             }
           
@@ -165,7 +163,7 @@
                 updatedRequest
             }
         },
-        components:{DisplaySchool,DisplayUser,Popup,RequestFilter,RequestEdit,RequestNotes}
+        components:{Popup,RequestFilter,RequestEdit,RequestNotes}
        
     }
 </script>

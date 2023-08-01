@@ -1,8 +1,8 @@
 <template>
-    <label>Discipline</label>
+   
         <div class="col-md-6">
-            <hr>
-            <div class="mb-3">
+           
+            <div class="mb-1">
                 <label>Prima preferenza</label>
                 <select  class="form-select" v-model="selectedDisci1" :class="{'is-invalid':!selectedDisci1 }" >
                     <option value="">Nessuna</option>
@@ -12,14 +12,14 @@
                         Disciplina non selezionata
                 </div>
             </div>
-            <div class="mb-3">
+            <div class="mb-1">
                 <label>Seconda preferenza</label>
                 <select class="form-select" v-model="selectedDisci2" :disabled="!selectedDisci1">
                     <option value="">Nessuna</option>
                     <option v-for="d in disciList2" :value="d" >{{d.text}}</option>
                 </select>
             </div>
-            <div class="mb-3">
+            <div class="mb-1">
                 
                 <label>Terza preferenza</label>
                 <select class="form-select" v-model="selectedDisci3" :disabled="!selectedDisci1" >
@@ -75,3 +75,9 @@ watch([selectedDisci1,selectedDisci2,selectedDisci3], (newConfig) => {
 
 
 </script>
+
+<style>
+.form-group label{
+        color: #888;
+    }
+</style>

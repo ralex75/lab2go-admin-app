@@ -71,19 +71,20 @@ const routes = [
       
    },
   },
-  /*{
+  {
     path:'/accounts',
     name:'useraccount.index',
     component: ()=>import('@/components/UserAccount.vue'),
     meta: {
         page:{
+        name:"Accounts",
         title: "Lista account",
         subtitle: "",
       },
-      roles:['docente']
+      roles:['docente','admin']
    },
    
-  },*/
+  },
   {
     path: '/requests',
     name: 'requests.index',
@@ -95,7 +96,7 @@ const routes = [
           subtitle:"",
           description:"lista delle richieste"
         },
-        roles:["docente"]
+        roles:["docente","admin"]
 
      
     }

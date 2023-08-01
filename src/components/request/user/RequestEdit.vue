@@ -52,10 +52,11 @@
                 <input type="text" class="form-control" v-model="usr_data.emailAlt" />
             </div>
             
-            <div>
-                      
-                <DisciplineSelection :discipline="discipline" @change="onDisciplineChanged" />
-                
+            <div class="form-group">
+                <label>Discipline</label>     
+                <div style="padding-left: 10px;">
+                    <DisciplineSelection :discipline="discipline" @change="onDisciplineChanged" />
+                </div>
             </div>
                       
             </div>
@@ -125,11 +126,12 @@ const onDisciplineChanged=(discipline)=>{
 const update=async()=>{
     
     try {
-        let { id }=requestCpy
-        let status="SUBMITTED"
-        await saveRequest(id,usr_data,[],status)
-        requestCpy.status=status
-        requestCpy.discipline=[...usr_data.discipline]
+        let { id,status }=requestCpy
+        let done=await saveRequest(id,usr_data,[],status)
+        if(done){
+            requestCpy.status=status
+            requestCpy.discipline=[...usr_data.discipline]
+        }
         emit('updatedRequest',requestCpy)
     }
     catch(exc){

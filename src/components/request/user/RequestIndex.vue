@@ -54,7 +54,7 @@
    
     import data from '@/assets/regioni.json' 
     import Popup from '@/components/Popup.vue'
-    import useUser from '@/composables/user.composable'
+   
     
     import { ref, onMounted, shallowRef } from 'vue'
 

@@ -17,7 +17,7 @@ export default function requestHelper(){
         
     }  
 
-    const saveRequest=async(formdata)=>{
+    const createRequest=async(formdata)=>{
         try{
             await axios.post(`/requests/create`,formdata) 
             router.push({"name":"requests.index"})
@@ -45,11 +45,12 @@ export default function requestHelper(){
 
     //id => id della richiesta
     //disciList => lista discipline accettate
-    const updateRequest=async (rid, usr_data={},disci_accepted=[], status="UNDEFINED")=>{
+    const saveRequest=async (rid, usr_data={},disci_accepted=[], status="UNDEFINED")=>{
 
         try{
-
-            let {data}= await axios.put(`/requests/${rid}/update`,{usr_data,disci_accepted,status}) 
+            console.log("UserDATA:",usr_data)
+            if(status=='REJECTED' || status=='SUBMITTED'){ disci_accepted=[]}
+            let {data}= await axios.put(`/requests/${rid}/update`,{usr_data, disci_accepted, status}) 
             return data.request
         }
         catch(exc){
@@ -63,7 +64,6 @@ export default function requestHelper(){
         requests,
         getRequests,
         getRequest,
-        updateRequest,
         saveRequest
     }
 }

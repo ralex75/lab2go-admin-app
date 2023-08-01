@@ -66,7 +66,7 @@
 <div class="d-flex align-items-center justify-content-center">
     <div class="col-md-6">
         <div class="d-grid gap-2 ">
-             <input type="button" @click="update()" :disabled="!dataIsChanged" class="btn w-100  btn-lg btn-danger" value="Aggiorna"  />
+             <input type="button" @click="update()" :disabled="!dataIsChanged" class="btn w-100  btn-lg " :class="{'btn-secondary':!dataIsChanged,'btn-danger':dataIsChanged}" value="Aggiorna"  />
         </div>
     </div>
     
@@ -80,7 +80,7 @@ import useUser from '@/composables/user.composable';
 import DisciplineSelection from './DisciplineSelection.vue';
 
 const props=defineProps(['args'])
-const {updateRequest}=useRequest()
+const {saveRequest}=useRequest()
 
 const request=props.args
 
@@ -88,25 +88,25 @@ const request=props.args
 const requestCpy=reactive(JSON.parse(JSON.stringify(request)))
 const sch_data=requestCpy.school_json_data
 const usr_data=requestCpy.user_json_data
-const discipline=usr_data.discipline
+const discipline=usr_data.discipline || []
 
 const emit=defineEmits(['closePopup','updatedRequest'])
 
 const Institute=computed(()=>{
-    return `<span>${sch_data.sc_tab_istituto}</span> <span>${sch_data.code}</span>`
+    return `<span>${sch_data.sc_tab_istituto}</span><span>${sch_data.sc_tab_code}</span>`
 })
 const Plesso=computed(()=>{
-    return `<span>${sch_data.sc_tab_plesso}</span> <span>${sch_data.sc_tab_plesso_code}</span>`
+    return `<span>${sch_data.sc_tab_plesso}</span><span>${sch_data.sc_tab_plesso_code}</span>`
 })
 
 const dataIsChanged=computed(()=>{
     
-    const src_user_data=request.user_json_data
+    const src_usr_data=request.user_json_data
 
-    if(!usr_data.discipline[0]) return false
+    if(!usr_data.discipline || !usr_data.discipline[0]) return false
    
-    for(let k in src_user_data){
-        if(JSON.stringify(src_user_data[k])!=JSON.stringify(usr_data[k])) 
+    for(let k in usr_data){
+        if(JSON.stringify(usr_data[k])!=JSON.stringify(src_usr_data[k])) 
         {   
             return true
         }
@@ -116,46 +116,25 @@ const dataIsChanged=computed(()=>{
 
 const onDisciplineChanged=(discipline)=>{
     
-    usr_data.discipline[0]=discipline[0]
-    console.log(usr_data.discipline)
-    console.log(request.user_json_data.discipline)
-}
-
-const closePopup=()=>{
-    emit('closePopup')
-}
-
-const doUpdateRequest=async(status="UNDEFINED")=>{
-    try {
-        
-        let {id,user_json_data,disci_accepted}=requestCpy
-        if(status=='REJECTED' || status=='SUBMITTED'){ disci_accepted=[]}
-        await updateRequest(id,user_json_data,disci_accepted,status)
-        requestCpy.status=status
-        requestCpy.disci_accepted=disci_accepted
-        emit('updatedRequest',requestCpy)
-    }
-    catch(exc){
-        throw exc
-    }
+    usr_data.discipline=[...discipline]
+   
 }
 
 
 
 const update=async()=>{
     
-   
-    let discipline=Object.values(usr_data.discipline)
-    let dis_acc=Object.values(disci_accepted.value)
-    
-    //riordina
-    dis_acc=discipline.filter(d=>dis_acc.indexOf(d)>-1)
-
-    requestCpy.disci_accepted=dis_acc
-    
-    if(requestCpy.disci_accepted.length==0) return
-
-    //doUpdateRequest('ACCEPTED')
+    try {
+        let { id }=requestCpy
+        let status="SUBMITTED"
+        await saveRequest(id,usr_data,[],status)
+        requestCpy.status=status
+        requestCpy.discipline=[...usr_data.discipline]
+        emit('updatedRequest',requestCpy)
+    }
+    catch(exc){
+        throw exc
+    }
 }
 
 
@@ -207,7 +186,7 @@ const update=async()=>{
 
    .separator{
         background: linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 48%, rgba(255,255,255,1) 100%);
-        width: 3px;
+        width: 1px;
         height: 100%;
         margin: 10px;
     }

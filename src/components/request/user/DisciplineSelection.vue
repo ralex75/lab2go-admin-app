@@ -57,7 +57,7 @@ const disciList3=computed(()=>{
   return discipline.filter(d=>d.value!=selectedDisci1.value.value && d.value!=selectedDisci2.value?.value)
 })
 
-const selectedDisci1=ref(discipline.find(d=>d.text==props.discipline[0]))
+const selectedDisci1=ref(discipline.find(d=>d.text==props.discipline[0]) || "")
 const selectedDisci2=ref(discipline.find(d=>d.text==props.discipline[1]) || "")
 const selectedDisci3=ref(discipline.find(d=>d.text==props.discipline[2]) || "")
 
@@ -65,7 +65,10 @@ const emit=defineEmits(['change'])
 
 watch([selectedDisci1,selectedDisci2,selectedDisci3], (newConfig) => {
     // your code
-    emit('change',[selectedDisci1.value.text,selectedDisci2.value.text,selectedDisci3.value.text])
+    let discipline=[selectedDisci1.value.text]
+    if(selectedDisci2.value.text) discipline.push(selectedDisci2.value.text)
+    if(selectedDisci3.value.text) discipline.push(selectedDisci3.value.text)
+    emit('change',discipline)
 
 });
 

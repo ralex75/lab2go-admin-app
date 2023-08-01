@@ -3,7 +3,7 @@ import storage from './composables/storage';
 
  
 const baseURL={"PROD":'/api',
-                "DEV":'http://localhost:5000/api'}
+                "DEV":'http://localhost:5173/api'}
 
 
 // FOR PRODUCTION

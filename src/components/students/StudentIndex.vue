@@ -15,7 +15,7 @@
 
             <!--<StudentCreate :school-id="schoolId" @storedStudent="storedStudent"></StudentCreate> -->
             <!--<FileBrowser v-if="showPopup" :title="popupTitle" @close="showPopup=false" @upload="doUpload"></FileBrowser>-->
-            <br>
+           
            
             <table>
                 <thead>

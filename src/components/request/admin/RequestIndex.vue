@@ -21,8 +21,11 @@
     <table class="table">
         <thead>
             <tr>
-                <th colspan="8" style="text-align: left;">
+                <th colspan="6" style="text-align: left;">
                     <h6>Numero di richieste attuali: <b>{{ requests.length }}</b></h6>
+                </th>
+                <th colspan="2" style="text-align: left;">
+                    <input type="button" @click="" :disabled="!someToFinalize" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':someToFinalize,'btn-light':!someToFinalize}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>
@@ -41,18 +44,15 @@
                 <td>{{ r.id }}</td>
                 <td>{{ r.school_json_data.sc_tab_istituto }}<br><span class="fs-6">{{ r.school_mec_code }}</span></td>
                 <td>{{ r.school_json_data.sc_tab_plesso }}<br><span class="fs-6">{{ r.plesso_mec_code }}</span></td>
-                <td>{{ parseZone(r.plesso_mec_code) }}</td>
+                <td>{{ utils.parseZone(r.plesso_mec_code) }}</td>
                 <td><span v-html="formatDiscipline(r.user_json_data.discipline)"></span></td>
                 <td><span v-html="formatDiscipline(r.disci_accepted)"></span></td>
                 <td>{{ r.status }}</td>
                 <td class="action">
-                    <div v-if="isAdmin">
+                    
                        <span style="color:green"><font-awesome-icon icon="fa-solid fa-eye" title="visualizza richiesta" @click="showPopup(r,'REQUEST')" /></span>
                        <span v-if="r.user_json_data.notes" style="color:dodgerblue"><font-awesome-icon icon="fa-solid fa-info-circle" title="mostra note" @click="showPopup(r.user_json_data.notes,'NOTES')"  /></span>
-                    </div>
-                    <div v-else>
-                        
-                    </div>
+                   
                 </td>
             </tr>
         </tbody>
@@ -65,11 +65,11 @@
     import RequestFilter from '@/components/request/RequestFilter.vue'
     import RequestEdit from './RequestEdit.vue'
     import RequestNotes from '@/components/request/RequestNotes.vue'
-    import data from '@/assets/regioni.json' 
+    import utils from '@/utils'
     import Popup from '@/components/Popup.vue'
     import useUser from '@/composables/user.composable'
     
-    import { ref, onMounted, shallowRef } from 'vue'
+    import { ref, onMounted, shallowRef,computed } from 'vue'
 
     export default {
         name:'RequestIndex',
@@ -81,8 +81,7 @@
             const filterChanged=ref(false)
             const selectedComponent=shallowRef(null)
             const showFilter=ref(false)
-            const regioni=data
-
+           
             onMounted(()=>{
                 
                 //solo amministratore può vedere tutte le richieste
@@ -91,14 +90,9 @@
                 })
             })
 
-            const parseZone=(meccode)=>{
-               
-                let prov=meccode.substring(0,2)
-                let reg=regioni.filter(r=>r.province.indexOf(prov)>-1)[0]
-                let city=reg.capoluoghi[reg.province.indexOf(prov)]
-                return `${city} - ${reg.nome}`
-
-            }
+            const someToFinalize=computed(()=>{
+                return filteredRequests.value.filter(r=>r.status!='SUBMITTED').length
+            })
 
             const applyFilter = ({term,disc})=>{
                 
@@ -156,11 +150,12 @@
                 showPopup,
                 closePopup,
                 selectedComponent,
-                parseZone,
+                utils,
                 formatDiscipline,
                 applyFilter,
                 showFilter,
-                updatedRequest
+                updatedRequest,
+                someToFinalize
             }
         },
         components:{Popup,RequestFilter,RequestEdit,RequestNotes}

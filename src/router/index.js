@@ -3,6 +3,7 @@ import HomeView from '../views/HomeView.vue'
 import AboutView from '../views/AboutView.vue'
 import useUser from '../composables/user.composable'
 import storage from '../composables/storage'
+import roles from '../roles'
 
 const routeGuard=(to, from, next)=>{
   
@@ -72,6 +73,20 @@ const routes = [
    },
   },
   {
+    path: '/school',
+    name: 'school.index',
+    component: ()=>import('@/components/school/SchoolIndex.vue'),
+    meta: {
+       page:{
+        name: "Scuole",
+        title: "",
+        subtitle:"",
+        description:""
+       },
+       roles:[roles.DOCENTE]
+    }
+  },
+  {
     path:'/accounts',
     name:'useraccount.index',
     component: ()=>import('@/components/UserAccount.vue'),
@@ -81,7 +96,7 @@ const routes = [
         title: "Lista account",
         subtitle: "",
       },
-      roles:['docente','admin']
+      roles:[roles.DOCENTE,roles.ADMIN]
    },
    
   },
@@ -96,9 +111,7 @@ const routes = [
           subtitle:"",
           description:"lista delle richieste"
         },
-        roles:["docente","admin"]
-
-     
+        roles:[roles.DOCENTE,roles.ADMIN]
     }
   },
   /*{

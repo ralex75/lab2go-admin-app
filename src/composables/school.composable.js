@@ -2,7 +2,7 @@ import axios from "../services"
 import {ref} from 'vue'
 import { useRouter } from "vue-router"
 
-export default function schoolHelper(){
+export default function useSchool(){
     
     const schools=ref([])
     const school=ref({})
@@ -10,7 +10,7 @@ export default function schoolHelper(){
     const errors=ref([])
     const working=ref(false)
 
-    const getSchools=async ({keyword,year}={"keyword":"","year":""})=>
+    /*const getSchools=async ({keyword,year}={"keyword":"","year":""})=>
     {   
         keyword=keyword || ''
         //year=year || new Date().getUTCFullYear()
@@ -18,7 +18,25 @@ export default function schoolHelper(){
         let {data}=await axios.post(`/schools/search`,{keyword,year}) 
 
         schools.value=data.schools
+    }  */
+    const getSchools=async ({keyword,year}={"keyword":"","year":""})=>
+    {   
+        keyword=keyword || ''
+        
+        let {data}=await axios.post(`/requests/list`,{keyword,year}) 
+      
+        schools.value=data.requests
+                                 .map(s=>({ 
+                                        
+                                        id:s.id,
+                                        year:s.year,
+                                        data:JSON.parse(s.school_json_data),
+                                        disci_accepted:s.disci_accepted
+
+                                    }))
     }  
+
+   
 
 
     //code => codice meccanografico

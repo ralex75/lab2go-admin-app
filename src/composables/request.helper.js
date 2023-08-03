@@ -60,12 +60,25 @@ export default function requestHelper(){
         }
     }
 
+    const finalize=async()=>{
+        
+        errors.value=""
+        
+        try{
+            await axios.put(`/requests/finalize`) 
+        }
+        catch(exc){
+            errors.value.push(exc)
+        }
+    }
+
     
     return {
         request,
         requests,
         getRequests,
         getRequest,
-        saveRequest
+        saveRequest,
+        finalize
     }
 }

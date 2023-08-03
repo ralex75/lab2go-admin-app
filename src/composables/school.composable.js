@@ -23,9 +23,9 @@ export default function useSchool(){
     {   
         keyword=keyword || ''
         
-        let {data}=await axios.post(`/requests/list`,{keyword,year}) 
+        let {data}=await axios.post(`/schools`,{keyword,year}) 
       
-        schools.value=data.requests
+        schools.value=data.schools
                                  .map(s=>({ 
                                         
                                         id:s.id,

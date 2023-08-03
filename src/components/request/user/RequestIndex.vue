@@ -35,12 +35,12 @@
                 <td>{{ r.id }}</td>
                 <td>{{ r.school_json_data.sc_tab_istituto }}<br><span class="fs-6">{{ r.school_mec_code }}</span></td>
                 <td>{{ r.school_json_data.sc_tab_plesso }}<br><span class="fs-6">{{ r.plesso_mec_code }}</span></td>
-                <td>{{ parseZone(r.plesso_mec_code) }}</td>
+                <td>{{ utils.parseZone(r.plesso_mec_code) }}</td>
                 <td><span v-html="formatDiscipline(r.user_json_data.discipline)"></span></td>
                 <td><span v-html="formatDiscipline(r.disci_accepted)"></span></td>
-                <td>{{ r.status }}</td>
+                <td>{{ parseStatus(r.status) }}</td>
                 <td class="action">
-                    <a href="" @click.prevent="showPopup(r,'REQUEST')">Gestisci</a>
+                    <a href="" v-if="canUpdate(r.status)" @click.prevent="showPopup(r,'REQUEST')">Gestisci</a>
                 </td>
             </tr>
         </tbody>
@@ -51,12 +51,9 @@
 <script>
     import useRequest from '@/composables/request.helper'
     import RequestEdit from './RequestEdit.vue'
-   
-    import data from '@/assets/regioni.json' 
     import Popup from '@/components/Popup.vue'
-   
-    
     import { ref, onMounted, shallowRef } from 'vue'
+    import utils from '@/utils'
 
     export default {
         name:'RequestIndex',
@@ -66,8 +63,7 @@
             const {requests,getRequests} = useRequest()
             const filteredRequests=ref([])
             const selectedComponent=shallowRef(null)
-            const regioni=data
-
+            
             onMounted(()=>{
               
                 getRequests().then(_=>{
@@ -76,13 +72,19 @@
                 
             })
 
-            const parseZone=(meccode)=>{
-               
-                let prov=meccode.substring(0,2)
-                let reg=regioni.filter(r=>r.province.indexOf(prov)>-1)[0]
-                let city=reg.capoluoghi[reg.province.indexOf(prov)]
-                return `${city} - ${reg.nome}`
+            //deadline 31-10-2023
+            const canUpdate=(status)=>{
+                return status=='SUBMITTED' && new Date() < new Date("10-31-2023") //in formato US
+            }
 
+           
+
+            const parseStatus=(status)=>{
+                
+                //utente non deve vedere le modifiche dello stato temporaneo alla tabella
+                //solo quando sono COMMITTED può vedere lo stato che è stato deciso per la sua richiesta
+                if(status=='ACCEPTED' || status=="REJECTED") return utils.statusMap["SUBMITTED"]
+                return utils.statusMap[status]
             }
 
             const applyFilter = ({term,disc})=>{
@@ -136,9 +138,11 @@
                 showPopup,
                 closePopup,
                 selectedComponent,
-                parseZone,
+                utils,
                 formatDiscipline,
-                updatedRequest
+                updatedRequest,
+                canUpdate,
+                parseStatus
             }
         },
         components:{Popup,RequestEdit}

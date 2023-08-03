@@ -101,15 +101,15 @@ const disci_accepted=ref(requestCpy.disci_accepted || [])
 const emit=defineEmits(['closePopup','updatedRequest'])
 
 const Institute=computed(()=>{
-    return `<span>${sch_data.sc_tab_istituto}</span> <span>${sch_data.code}</span>`
+    return `<span>${sch_data.sc_tab_istituto}</span> <span>${sch_data.sc_tab_code}</span>`
 })
 const Plesso=computed(()=>{
     return `<span>${sch_data.sc_tab_plesso}</span> <span>${sch_data.sc_tab_plesso_code}</span>`
 })
 
-const closePopup=()=>{
+/*const closePopup=()=>{
     emit('closePopup')
-}
+}*/
 
 const doUpdateRequest=async(status="UNDEFINED")=>{
     try {

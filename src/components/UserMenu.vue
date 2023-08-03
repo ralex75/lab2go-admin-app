@@ -36,13 +36,15 @@
        
         let userRole=(user.value?.role || "").toLowerCase();
         let routes=router.options.routes
-       
+      
         //esclude login logout e registrati
         routes=routes.filter(r=>r.meta && !["login","logout","signup"].some(path=>r.path.indexOf(path)>-1))
         
         //tutte le voci senza ruoli e quelle con cui il ruolo fa match con quello dell'utente
         routes=routes.filter(r=>!r.meta.roles || (r.meta.roles && r.meta.roles?.some(r=>userRole.indexOf(r)>-1)))
        
+        
+
         return routes
 
     })

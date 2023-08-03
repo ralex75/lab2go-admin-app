@@ -83,7 +83,7 @@ const routes = [
         subtitle:"",
         description:""
        },
-       roles:[roles.DOCENTE]
+       roles:[roles.DOCENTE,roles.ADMIN]
     }
   },
   {

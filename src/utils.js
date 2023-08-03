@@ -1,5 +1,12 @@
 import regioni from '@/assets/regioni.json' 
 
+const statusMap={
+    "PENDING":"IN ATTESA DI APPROVAZIONE",
+    "SUBMITTED":"SOTTOMESSA",
+    "ACCEPTED_COMMIT":"ACCETTATA",
+    "REJECTED_COMMIT":"RIFIUTATA"
+}
+
 const parseZone=(meccode)=>{
     
    
@@ -10,6 +17,9 @@ const parseZone=(meccode)=>{
 
 }
 
+
+
 export default {
-    parseZone
+    parseZone,
+    statusMap
 }

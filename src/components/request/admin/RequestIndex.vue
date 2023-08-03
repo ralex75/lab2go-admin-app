@@ -25,7 +25,7 @@
                     <h6>Numero di richieste attuali: <b>{{ requests.length }}</b></h6>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="" :disabled="!someToFinalize" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':someToFinalize,'btn-light':!someToFinalize}"  value="Finalizza" />
+                    <input type="button" @click="doFinalize()" :disabled="!someToFinalize" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':someToFinalize,'btn-light':!someToFinalize}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>
@@ -76,19 +76,19 @@
         setup(){
             
             const {isAdmin}=useUser()
-            const {requests,getRequests} = useRequest()
+            const {requests,getRequests,finalize} = useRequest()
             const filteredRequests=ref([])
             const filterChanged=ref(false)
             const selectedComponent=shallowRef(null)
             const showFilter=ref(false)
-           
-            onMounted(()=>{
-                
-                //solo amministratore può vedere tutte le richieste
-                getRequests().then(_=>{
+                      
+
+            const getAllRequests=()=>{
+                 //solo amministratore può vedere tutte le richieste
+                 getRequests().then(_=>{
                     filteredRequests.value=Object.assign(requests.value)
                 })
-            })
+            }
 
             const someToFinalize=computed(()=>{
                 return filteredRequests.value.filter(r=>r.status!='SUBMITTED').length
@@ -138,9 +138,16 @@
                 req.user_json_data=JSON.parse(ureq.user_json_data)
                 req.disci_accepted=JSON.parse(ureq.disci_accepted)
                 req.status=ureq.status
-                //requests.value[idx]=req
                 closePopup()
             }
+
+            const doFinalize=async ()=>{
+                finalize().then(_=>getAllRequests())
+                
+
+            }
+
+            onMounted(getAllRequests)
           
             return {
                 requests,
@@ -155,7 +162,8 @@
                 applyFilter,
                 showFilter,
                 updatedRequest,
-                someToFinalize
+                someToFinalize,
+                doFinalize
             }
         },
         components:{Popup,RequestFilter,RequestEdit,RequestNotes}

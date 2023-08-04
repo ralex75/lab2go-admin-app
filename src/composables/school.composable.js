@@ -9,16 +9,9 @@ export default function useSchool(){
     const router=useRouter()
     const errors=ref([])
     const working=ref(false)
+    const schoolYears=ref([])
 
-    /*const getSchools=async ({keyword,year}={"keyword":"","year":""})=>
-    {   
-        keyword=keyword || ''
-        //year=year || new Date().getUTCFullYear()
-        
-        let {data}=await axios.post(`/schools/search`,{keyword,year}) 
-
-        schools.value=data.schools
-    }  */
+    
     const getSchools=async ({keyword,year}={"keyword":"","year":""})=>
     {   
         keyword=keyword || ''
@@ -35,8 +28,11 @@ export default function useSchool(){
 
                                     }))
     }  
-
-   
+    
+    const getSchoolPartecipationYears=async(schoolId)=>{
+        let {data}=await axios.get(`/schools/${schoolId}/years`)  
+        schoolYears.value=data.years
+    }
 
 
     //code => codice meccanografico
@@ -121,9 +117,11 @@ export default function useSchool(){
         school,
         errors,
         working,
+        schoolYears,
         getSchoolInfo,
         getSchools,
         getSchool,
+        getSchoolPartecipationYears,
         storeSchool,
         saveSchool,
         deleteSchool

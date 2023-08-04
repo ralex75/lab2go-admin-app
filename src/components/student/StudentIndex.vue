@@ -4,28 +4,34 @@
                 <h1>Aggiornamento dei dati in corso....</h1>
             </section>
             <section v-if="!working">
-            <DisplayErrors :errors="errors"/>
-            <h3 v-if="filteredStudents.length==0" class="message warning">
+           
+           
+
+           
+            <ul>
+                <li v-for="sy in schoolYears" :key="sy.id">
+                    <a href="" :class="{'selected':year==currentYear}"  v-for="y in schoolYears">Studenti per anno: {{ sy.year }}</a>
+                </li>
+            </ul>
+           
+         
+
+            <div class="col-md-6 alert alert-warning text-center" role="alert" v-if="filteredStudents.length==0"> 
                 Non ci sono studenti per l'anno: {{ currentYear }}
-            </h3>
-
-            <div class="navig-link">
-                <a href="" :class="{'selected':year==currentYear}" @click.prevent="currentYear=year" v-for="year in studentsYears">Anno: {{ year }}</a>
-            </div>  
-
+            </div>
             <!--<StudentCreate :school-id="schoolId" @storedStudent="storedStudent"></StudentCreate> -->
             <!--<FileBrowser v-if="showPopup" :title="popupTitle" @close="showPopup=false" @upload="doUpload"></FileBrowser>-->
-           
-           
-            <table>
+            
+
+            <table class="table">
                 <thead>
                     <tr>
-                        <th colspan="2">
+                        <th colspan="3">
                                 <div>Studenti registrati per l'anno: {{ currentYear }}</div>
                         </th>
                         <th>
                             <div class="form-group inline gap" v-if="currentYear==new Date().getUTCFullYear()"  >
-                                    <router-link :to="{name:'students.add',params:{id:schoolId}}" class="link-as-button">Aggiungi</router-link>
+                                    <!--<router-link :to="{name:'students.add',params:{id:schoolId}}" class="link-as-button">Aggiungi</router-link>-->
                                     <button  type="button" class="btn btn-upload" @click.prevent="showUploadPopup()">Aggiungi da File</button>
                             </div>
                         </th>
@@ -33,18 +39,18 @@
                     <tr>
                         <th>Nome</th>
                         <th>Cognome</th>
-                        <th>
-                            
-                        </th>
+                        <th>Email</th>
+                        <th>Disciplina</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="info" v-for="item in filteredStudents" :key="item.id">
-                        <td>{{ item.name }}</td>
-                        <td>{{ item.surname }}</td>
+                    <tr class="info" v-for="s in filteredStudents" :key="s.id">
+                        <td>{{ s.name }}</td>
+                        <td>{{ s.surname }}</td>
+                        <td>{{ s.email }}</td>
                         <td class="col-md">
                             <div class="form-group inline gap" >
-                                <button type="button" class="btn btn-danger" @click.prevent="doDeleteStudent(item)">Elimina</button>
+                                <button type="button" class="btn btn-danger" @click.prevent="doDeleteStudent(s)">Elimina</button>
                             </div>
                         </td>
                     </tr>
@@ -56,10 +62,11 @@
 
 <script>
 import { onMounted,ref,computed } from 'vue';
-import studentHelper from '@/composables/student.helper';
-import StudentCreate from './StudentCreate.vue';
-import DisplayErrors from '../DisplayErrors.vue';
-import FileBrowser from '../FileBrowser.vue';
+import useStudent from '@/composables/student.composable';
+import useSchool from '../../composables/school.composable';
+//import StudentCreate from './StudentCreate.vue';
+//import DisplayErrors from '../DisplayErrors.vue';
+//import FileBrowser from '../FileBrowser.vue';
 
 
 export default {
@@ -70,21 +77,19 @@ export default {
         },
     },
     setup(props) {
-        const { errors, students, getStudents, destroyStudent,uploadStudentsList } = studentHelper();
-        const currentYear = ref(2023);
+        const { errors, students, getStudents, destroyStudent,uploadStudentsList } = useStudent();
+        const {getSchoolPartecipationYears,schoolYears}=useSchool()
+        const currentYear = ref(new Date().getFullYear());
         const popupTitle="Seleziona il file con la lista degli studenti da caricare"
         let showPopup=ref(false)
         const working=ref(false)
-        let studentsYears=ref([])
+        
         
         onMounted(async ()=>{
 
-           
-            await getStudents(props.schoolId,currentYear.value);
-            let years=students.value.map(s=>s.schoolStudentYears.map(y=>y.year))
-            years.push(new Date().getUTCFullYear())
-            years=new Set(years.flat(1))
-            studentsYears.value=[...years]
+            
+            getStudents(props.schoolId,currentYear.value);
+            getSchoolPartecipationYears(props.schoolId)
             
         })
 
@@ -137,42 +142,18 @@ export default {
             currentYear,
             showPopup,
             popupTitle,
+            schoolYears,
             doDeleteStudent,
             storedStudent,
             showUploadPopup,
             doUpload,
             errors,
             working,
-            studentsYears
+            
      
         };
     },
-    components: { StudentCreate, FileBrowser, DisplayErrors }
+    
 }
 </script>
 
-<style scoped>
-    .navig-link{
-        display: flex;
-        flex-direction: column;
-        gap:10px
-    }
-
-    .inline{
-        display: flex;
-        flex-direction: row;
-        gap: 10px;
-    }
-
-    .navig-link a{
-        padding: 10px;
-        
-    }
-
-    a.selected{
-        text-decoration: none;
-        background-color: #34454d;
-        color:#DDD;
-        pointer-events: none;
-    }
-</style>

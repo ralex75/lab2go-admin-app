@@ -6,7 +6,6 @@ export default function requestHelper(){
     
     const requests=ref([])
     const request=ref({})
-    const errors=ref([])
     const error=ref("")
     const router=useRouter()
    
@@ -18,6 +17,7 @@ export default function requestHelper(){
     }  
 
     const createRequest=async(formdata)=>{
+        error.value=""
         try{
             await axios.post(`/requests/create`,formdata) 
             router.push({"name":"requests.index"})
@@ -46,7 +46,7 @@ export default function requestHelper(){
     //id => id della richiesta
     //disciList => lista discipline accettate
     const saveRequest=async (rid, usr_data={},disci_accepted=[], status="UNDEFINED")=>{
-
+        error.value=""
         try{
            
             if(status=='REJECTED' || status=='SUBMITTED'){ disci_accepted=[]}
@@ -56,19 +56,22 @@ export default function requestHelper(){
             return data
         }
         catch(exc){
-            errors.value.push(exc)
+            error.value=exc
         }
     }
 
     const finalize=async()=>{
         
-        errors.value=""
+        error.value=""
         
         try{
-            await axios.put(`/requests/finalize`) 
+            
+            let {data}=await axios.put(`/requests/finalize`) 
+            if(data.exc){ throw new Error("Si è verificato un problema nell'inserimento dati") }
         }
         catch(exc){
-            errors.value.push(exc)
+            
+            error.value=exc.message
         }
     }
 
@@ -76,6 +79,7 @@ export default function requestHelper(){
     return {
         request,
         requests,
+        error,
         getRequests,
         getRequest,
         saveRequest,

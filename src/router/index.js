@@ -87,6 +87,12 @@ const routes = [
     }
   },
   {
+    path: '/schools/:schoolId/students',
+    name: 'student.index',
+    component: ()=>import('@/components/student/StudentIndex.vue'),
+    props:true,
+  },
+  {
     path:'/accounts',
     name:'useraccount.index',
     component: ()=>import('@/components/UserAccount.vue'),

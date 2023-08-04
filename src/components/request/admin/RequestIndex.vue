@@ -12,6 +12,10 @@
             </div>
         </div>
     </div>
+    
+    <div class="col-md-6 alert alert-danger text-center" role="alert" v-if="error"> 
+       {{error}}
+    </div>
     <div class="col-md-6 alert alert-info text-center" role="alert" v-if="filterChanged && filteredRequests?.length==0"> 
         Non ci sono richieste con il filtro selezionato
     </div>
@@ -76,7 +80,7 @@
         setup(){
             
             const {isAdmin}=useUser()
-            const {requests,getRequests,finalize} = useRequest()
+            const {requests,getRequests,finalize,error} = useRequest()
             const filteredRequests=ref([])
             const filterChanged=ref(false)
             const selectedComponent=shallowRef(null)
@@ -143,8 +147,7 @@
 
             const doFinalize=async ()=>{
                 finalize().then(_=>getAllRequests())
-                
-
+         
             }
 
             onMounted(getAllRequests)
@@ -163,7 +166,8 @@
                 showFilter,
                 updatedRequest,
                 someToFinalize,
-                doFinalize
+                doFinalize,
+                error
             }
         },
         components:{Popup,RequestFilter,RequestEdit,RequestNotes}

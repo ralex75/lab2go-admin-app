@@ -1,6 +1,5 @@
 <template>
             <div class="block-container">
-                <DisplayErrors :errors="errors"/>
                 <div>
                     <form  @submit.prevent="doSave()">
                         <div class="form-group inline gap" >

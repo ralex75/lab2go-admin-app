@@ -16,7 +16,10 @@
                         <td>{{ s.data.sc_tab_indirizzo }}</td>
                         <td>{{ utils.parseZone(s.data.sc_tab_plesso_code) }}</td>
                         <td>
-                            <button type="button" class="btn btn-primary btn-ms" @click.prevent="editSchool(s.id)">Modifica</button>
+                           
+                            <!--<button type="button" class="btn btn-primary btn-ms" @click.prevent="editSchool(s.id)">Modifica</button>-->
+                            <router-link class="btn btn-outline-primary" :to="{ name: 'student.index', params: { 'schoolId': s.id }}">Studenti</router-link>
+                            
                         </td>
                     </tr>
                 </tbody>

@@ -2,17 +2,17 @@ import axios from "../services"
 import { reactive,ref } from 'vue'
 import { useRouter } from "vue-router"
 
-export default function studentHelper(){
+export default function useStudent(){
     
     const students=ref([])
     const student=reactive({})
     const router=useRouter()
     const errors=ref([])
 
-    const getStudents=async (schoolId,year=new Date().getUTCFullYear())=>
+    const getStudents=async (schoolId)=>
     { 
-        let response=await axios.get(`/students/${schoolId}/${year}`) 
-        students.value=response.data.students
+        let {data}=await axios.get(`/students/${schoolId}`) 
+        students.value=data.students
     }  
     
     const getStudent=async (id)=>

@@ -1,9 +1,7 @@
 <template>
         
         <div class="block-container">
-            <DisplayErrors :errors="errors"/>
             <div>
-                
                 <form  @submit.prevent="doUpdate()">
                     <div class="form-group gap" >
                         <div class="form-group">
@@ -32,7 +30,7 @@
                     </div>
                     <hr>
                     <div class="form-group inline gap">
-                        <button type="submit" :disabled="!dataIsChanged" :class="{'btn-primary':dataIsChanged}" class="btn">Aggiorna</button>
+                        <!--<button type="submit" :disabled="!dataIsChanged" :class="{'btn-primary':dataIsChanged}" class="btn">Aggiorna</button>-->
                     </div>
                 </form>
             </div>
@@ -42,9 +40,8 @@
 
 <script>
 import { ref,onMounted,computed } from 'vue';
-import schoolHelper from '../../composables/school.helper'
-import DisplayErrors from '../DisplayErrors.vue';
-import {sections} from '../../sections'
+import useSchool from '@/composables/school.composable'
+//import {sections} from '../../sections'
 
 
 export default {
@@ -56,9 +53,9 @@ export default {
         }
     },
     setup(props,{emit}) {
-        const { school, getSchool, saveSchool, errors } = schoolHelper();
+        const { school, getSchool, saveSchool, errors } = useSchool();
        
-        let orig = ref({});
+        /*let orig = ref({});
         let currentPartecipation=computed({
             get:function(){
                 return school.value.year==new Date().getUTCFullYear()
@@ -94,9 +91,9 @@ export default {
             doUpdate,
             sections,
             dataIsChanged
-        };
+        };*/
     },
-    components: { DisplayErrors }
+    
 }
 </script>
 

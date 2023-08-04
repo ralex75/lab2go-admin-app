@@ -41,10 +41,7 @@
 
 <script>
 import { reactive } from 'vue';
-import schoolHelper from '../../composables/school.helper'
-import DisplayErrors from '../DisplayErrors.vue';
-import {sections} from '../../sections'
-
+import schoolHelper from '@/composables/school.helper'
 
 export default {
     name:'CreateSchool',

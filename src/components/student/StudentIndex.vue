@@ -10,18 +10,18 @@
            
             <ul>
                 <li v-for="sy in schoolYears" :key="sy.id">
-                    <a href="" :class="{'selected':year==currentYear}"  v-for="y in schoolYears">Studenti per anno: {{ sy.year }}</a>
+                    <a href=""   v-for="y in schoolYears">Studenti per anno: {{ sy.year }}</a>
                 </li>
             </ul>
            
-         
 
-            <div class="col-md-6 alert alert-warning text-center" role="alert" v-if="filteredStudents.length==0"> 
+            <div class="col-md-6 alert alert-warning text-center" role="alert" v-if="students.length==0"> 
                 Non ci sono studenti per l'anno: {{ currentYear }}
             </div>
             <!--<StudentCreate :school-id="schoolId" @storedStudent="storedStudent"></StudentCreate> -->
             <!--<FileBrowser v-if="showPopup" :title="popupTitle" @close="showPopup=false" @upload="doUpload"></FileBrowser>-->
             
+            <StudentCreate :schoolId="props.schoolId" @storedStudent="refreshStudents" />
 
             <table class="table">
                 <thead>
@@ -44,7 +44,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="info" v-for="s in filteredStudents" :key="s.id">
+                    <tr class="info" v-for="s in students" :key="s.id">
                         <td>{{ s.name }}</td>
                         <td>{{ s.surname }}</td>
                         <td>{{ s.email }}</td>
@@ -63,7 +63,8 @@
 <script>
 import { onMounted,ref,computed } from 'vue';
 import useStudent from '@/composables/student.composable';
-import useSchool from '../../composables/school.composable';
+import useSchool from '@/composables/school.composable';
+import StudentCreate from './StudentCreate.vue';
 //import StudentCreate from './StudentCreate.vue';
 //import DisplayErrors from '../DisplayErrors.vue';
 //import FileBrowser from '../FileBrowser.vue';
@@ -77,28 +78,20 @@ export default {
         },
     },
     setup(props) {
-        const { errors, students, getStudents, destroyStudent,uploadStudentsList } = useStudent();
-        const {getSchoolPartecipationYears,schoolYears}=useSchool()
+        const { errors, students, getStudents, destroyStudent, uploadStudentsList } = useStudent();
+        const { getSchoolPartecipationYears, schoolYears } = useSchool();
         const currentYear = ref(new Date().getFullYear());
-        const popupTitle="Seleziona il file con la lista degli studenti da caricare"
-        let showPopup=ref(false)
-        const working=ref(false)
-        
-        
-        onMounted(async ()=>{
-
-            
-            getStudents(props.schoolId,currentYear.value);
-            getSchoolPartecipationYears(props.schoolId)
-            
-        })
-
-
-        const filteredStudents=computed(()=>{
-            let all=students.value
-            return all.filter(s=>s.schoolStudentYears.map(y=>y.year).indexOf(currentYear.value)>-1)
-        })
-        
+        const popupTitle = "Seleziona il file con la lista degli studenti da caricare";
+        let showPopup = ref(false);
+        const working = ref(false);
+        onMounted(async () => {
+            getStudents(props.schoolId, currentYear.value);
+            getSchoolPartecipationYears(props.schoolId);
+        });
+        /*const filteredStudents = computed(() => {
+            let all = students.value;
+            return all.filter(s => s.schoolStudentYears.map(y => y.year).indexOf(currentYear.value) > -1);
+        });*/
         const doDeleteStudent = async (student) => {
             let { id, name, surname } = student;
             if (!window.confirm(`Si è sicuri di voler eliminare lo studente ${name} ${surname}?`))
@@ -106,54 +99,45 @@ export default {
             await destroyStudent(id);
             await getStudents(props.schoolId);
         };
-
-        const doUpload=async (file)=>{
-            try{
-                working.value=true
-                await uploadStudentsList(file,props.schoolId)
-                students.value.length=0
-                setTimeout(async ()=>{
-                    await getStudents(props.schoolId)
-                    working.value=false
-                },2000)
-                
+        const doUpload = async (file) => {
+            try {
+                working.value = true;
+                await uploadStudentsList(file, props.schoolId);
+                students.value.length = 0;
+                setTimeout(async () => {
+                    await getStudents(props.schoolId);
+                    working.value = false;
+                }, 2000);
             }
-            catch(exc)
-            {}
-            finally
-            {
-                showUploadPopup()
+            catch (exc) { }
+            finally {
+                showUploadPopup();
             }
+        };
+        const showUploadPopup = () => {
+            showPopup.value = !showPopup.value;
+        };
+        
+        const refreshStudents=()=>{
+            getStudents(props.schoolId, currentYear.value);
         }
 
-       
-        const showUploadPopup=()=>{
-            showPopup.value=!showPopup.value
-        }
-
-        const storedStudent=(student)=>{
-            students.value.push(student)
-        }
-
-       
         return {
-
-            filteredStudents,
+            props,
             currentYear,
             showPopup,
             popupTitle,
             schoolYears,
             doDeleteStudent,
-            storedStudent,
             showUploadPopup,
             doUpload,
+            refreshStudents,
             errors,
             working,
-            
-     
+            students
         };
     },
-    
+    components: { StudentCreate }
 }
 </script>
 

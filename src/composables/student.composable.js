@@ -28,8 +28,8 @@ export default function useStudent(){
         errors.value=[]
 
         try{
-            await axios.post("/students",{schoolId,student}) 
-            router.push({name:'school.details',params:{id:schoolId}})
+            await axios.post("/students/store",{schoolId,student}) 
+            //router.push({name:'school.details',params:{id:schoolId}})
         }
         catch(exc){
             console.log(exc)
@@ -52,18 +52,6 @@ export default function useStudent(){
         }
     }
 
-    /*const saveSchool=async (id)=>
-    { 
-        errors.value=''
-        try{
-            
-            await axios.put(`/schools/${id}`,school.value) 
-            await router.push({name:'school'})
-        }
-        catch(exc){
-            handlingError(exc)
-        }
-    }   */
 
     const handlingError=(exc)=>{
        
@@ -87,6 +75,7 @@ export default function useStudent(){
         getStudents,
         storeStudent,
         destroyStudent,
-        uploadStudentsList
+        uploadStudentsList,
+        
     }
 }

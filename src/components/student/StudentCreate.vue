@@ -136,6 +136,7 @@ const doSave=async ()=>{
     storeStudent(props.schoolId,form).then(_=>{
         emits("storedStudent")
         Object.keys(form).forEach(k=>form[k]="")
+        formValidated.value=false
     })
    
 }

@@ -3,7 +3,7 @@
 <table class="table">
     <thead>
         <tr>
-           <th :colspan="props.colHeaderKeys.length" v-if="props.header">
+           <th :colspan="colSpanCount" v-if="props.header">
                 {{ props.header }}
            </th>
         </tr>
@@ -22,7 +22,7 @@
                 {{ r[k] }}
             </td>
             <td v-if="hasAction">
-                <input type="button" v-if="props.onDelete" value="Elimina" class="btn btn-danger">
+                <input type="button" v-if="props.deleteCallback" @click="props.deleteCallback(r)" value="Elimina" class="btn btn-danger">
             </td>
         </tr>
     </tbody>
@@ -30,20 +30,27 @@
 
 </template>
 <script setup>
-import { ref,computed } from 'vue';
+import { ref,computed,useAttrs } from 'vue';
+
+const emits=defineEmits(["delete"])
+
 
 const props=defineProps({
     "header":String,
     "colHeaderKeys":{type:Array,required:true},
-    "onCreate":{type:Object},
-    "onDelete":{type:Object},
+    "deleteCallback":{type:Function},
     "data":{type:Array,required:true},
     "dataKeys":{type:Array,required:true}
     
 })
 
+const colSpanCount=computed(()=>{
+    return props.colHeaderKeys.length + (hasAction.value ? 1 : 0)
+})
+
 const hasAction=computed(()=>{
-    return props.onCreate || props.onDelete
+    return props.deleteCallback
+    
 })
 
 </script>

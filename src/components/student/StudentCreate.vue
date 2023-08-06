@@ -1,5 +1,5 @@
 <template>
-<div class="container" style="width:600px" >
+<div class="container" style="width:600px">
     <form  @submit.prevent="doSave()" novalidate :class="{'was-validated':formValidated}">
         
             <div class="form-group row mt-1" >

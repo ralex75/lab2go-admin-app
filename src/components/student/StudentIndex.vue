@@ -1,13 +1,10 @@
 <template>
     <div class="block-container">
-            <section v-if="working">
-                <h1>Aggiornamento dei dati in corso....</h1>
-            </section>
-            <section v-if="!working">
-           
+            
             <ul>
                 <li v-for="sy in schoolYears" :key="sy.id">
-                    <a href=""   v-for="y in schoolYears">Studenti per anno: {{ sy.year }}</a>
+                    <a href="" style="margin-right: 10px;"   v-for="sy in schoolYears">Studenti per anno: {{ sy.year }}</a>
+                    <input type="button" v-if="sy.year==2023" class="btn btn-primary" value="Aggiungi studente" @click.prevent="showPopup=true"/>
                 </li>
             </ul>
            
@@ -15,10 +12,11 @@
                 Non ci sono studenti per l'anno: {{ currentYear }}
             </div>
             <!--<FileBrowser v-if="showPopup" :title="popupTitle" @close="showPopup=false" @upload="doUpload"></FileBrowser>-->
-            
-            <StudentCreate :schoolId="props.schoolId" @storedStudent="refreshStudents" />
+            <Popup v-if="showPopup" @close-popup="closePopup()">
+                <StudentCreate :schoolId="props.schoolId" @storedStudent="refreshStudents" />
+            </Popup>
             <DataTable v-for="d in Object.keys(filteredStudents)" :header="d" :data="filteredStudents[d]" :dataKeys="['name','surname','email']" :colHeaderKeys="['Nome','Cognome','Email']" />
-        </section>
+        
     </div>
 </template>
 
@@ -27,7 +25,8 @@ import { onMounted,ref,computed } from 'vue';
 import useStudent from '@/composables/student.composable';
 import useSchool from '@/composables/school.composable';
 import StudentCreate from './StudentCreate.vue';
-import DataTable from '../DataTable.vue';
+import DataTable from '@/components/DataTable.vue';
+import Popup from '@/components/Popup.vue'
 
 //import StudentCreate from './StudentCreate.vue';
 //import DisplayErrors from '../DisplayErrors.vue';
@@ -47,7 +46,7 @@ export default {
         const { getSchoolPartecipationYears, schoolYears } = useSchool();
         const currentYear = ref(new Date().getFullYear());
         const popupTitle = "Seleziona il file con la lista degli studenti da caricare";
-        let showPopup = ref(false);
+        const showPopup = ref(false);
         const working = ref(false);
         
         onMounted(async () => {
@@ -68,6 +67,10 @@ export default {
             )
             return discipline
         });
+
+        const closePopup=()=>{
+            showPopup.value=false
+        }
 
         const doDeleteStudent = async (student) => {
             let { id, name, surname } = student;
@@ -103,6 +106,7 @@ export default {
             props,
             currentYear,
             showPopup,
+            closePopup,
             popupTitle,
             schoolYears,
             doDeleteStudent,
@@ -115,7 +119,7 @@ export default {
             students
         };
     },
-    components: { StudentCreate, DataTable }
+    components: { StudentCreate, DataTable,Popup }
 }
 </script>
 

@@ -1,45 +1,53 @@
 <template>
-<div class="container-fluid container-md" style="float:left;" >
+<div class="container" style="width:600px" >
     <form  @submit.prevent="doSave()" novalidate :class="{'was-validated':formValidated}">
-        <div class="row">
-            <div class="col-md-4 form-group" >
-                <label for="name" class="col-sm-2 control-label">*Nome</label>
-                <input type="text" name="name" class="form-control"  v-model="form.name" :pattern="pattern.alpha" required id="name" placeholder="Nome studente">
-                <div :class="{'invalid-feedback':errors.name}">
-                    {{ errors.name }}
+        
+            <div class="form-group row mt-1" >
+                <label for="name" class="col-sm-2 col-form-label">*Nome</label>
+                <div class="col-sm-10">
+                    <input type="text" name="name" class="form-control"  v-model="form.name" :pattern="pattern.alpha" required id="name" placeholder="Nome studente">
+                    <div :class="{'invalid-feedback':errors.name}">
+                        {{ errors.name }}
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 form-group" >
-                <label for="surname" class="col-sm-2 control-label">*Cognome</label>
-                <input type="text" name="surname" class="form-control" id="surname" :pattern="pattern.alpha" v-model="form.surname" required placeholder="Cognome studente">
-                <div :class="{'invalid-feedback':errors.surname}">
-                    {{ errors.surname }}
+            <div class="form-group row mt-1" >
+                <label for="surname" class="col-sm-2 col-form-label">*Cognome</label>
+                <div class="col-sm-10">
+                    <input type="text" name="surname" class="form-control" id="surname" :pattern="pattern.alpha" v-model="form.surname" required placeholder="Cognome studente">
+                    <div :class="{'invalid-feedback':errors.surname}">
+                        {{ errors.surname }}
+                    </div>
                 </div>
             </div>
-            <div class="col-md-4 form-group" >
+            <div class="form-group row mt-1" >
                 <label for="email" class="col-sm-2 control-label">*Email</label>
-                <input type="text" name="email" class="form-control" id="email" required :pattern="pattern.email" v-model="form.email" placeholder="Email studente">
-                <div :class="{'invalid-feedback':errors.email}">
-                    {{ errors.email }}
+                <div class="col-sm-10">
+                    <input type="text" name="email" class="form-control" id="email" required :pattern="pattern.email" v-model="form.email" placeholder="Email studente">
+                    <div :class="{'invalid-feedback':errors.email}">
+                        {{ errors.email }}
+                    </div>
                 </div>
             </div>
             
-        </div>
-        <div class="row">
-            <div class="col-md-4 form-group" >
+        
+            <div class="form-group row mt-1" >
                 <label for="disciplina" class="col-sm-2 control-label">Disciplina</label>
-                <select class="form-select" required aria-label="Default select example" v-model="form.disciplina">
-                    <option selected value="" v-if="discipline?.length>0 && !form.disciplina">Seleziona disciplina</option>
-                    <option v-for="d in discipline" :value="d">{{ d }}</option>
-                </select>
-                <div v-if="!form.disciplina" :class="{'invalid-feedback':!form.disciplina}">
-                    Disciplina non selezionata
+                <div class="col-sm-10">
+                    <select class="form-select" required aria-label="Default select example" v-model="form.disciplina">
+                        <option selected value="" v-if="discipline?.length>0 && !form.disciplina">Seleziona disciplina</option>
+                        <option v-for="d in discipline" :value="d">{{ d }}</option>
+                    </select>
+                    <div v-if="!form.disciplina" :class="{'invalid-feedback':!form.disciplina}">
+                        Disciplina non selezionata
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col-md-4 p-2 form-group ">
-                <button type="submit" class="btn btn-primary">Aggiungi</button>
+        
+        <div class="form-group row mt-4">
+            <label class="col-sm-2"></label>
+            <div class="col-sm-10 form-group  mx-auto">
+                <button type="submit" class="btn btn-primary w-100">Aggiungi</button>
             </div>
         </div>
     </form>

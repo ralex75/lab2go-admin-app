@@ -16,7 +16,7 @@
             
             
             <Popup v-if="showPopup" @close-popup="closePopup()">
-                <StudentUpload v-if="showFileBrowser" :school="school"  @upload="onStoredStudent" />
+                <StudentUpload v-if="showFileBrowser" :school="school"  @storedStudent="onStoredStudent" />
                 <StudentCreate v-else :school="school" @storedStudent="onStoredStudent" />
             </Popup>
 

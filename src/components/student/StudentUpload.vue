@@ -34,7 +34,7 @@ const props=defineProps({
     "school":{type:Object,required:true}
 })
 
-const emit=defineEmits(['uploadedStudents'])
+const emit=defineEmits(['storedStudent'])
 
 const{uploadStudentsList,error} = useStudent()
 
@@ -57,13 +57,17 @@ const discipline=computed(()=>{
 const doUpload = async () => {
 
             try {
-                working.value = true;
-                await uploadStudentsList(form, school.value.id);
-                emit('uploadedStudents')    
+                //working.value = true;
+                
+                await uploadStudentsList(form, props.school.id);
+                emit('storedStudent')    
             }
-            catch (exc) {  }
+            catch (exc) {  
+
+                console.log(exc)
+            }
             finally {
-                working.value=false    
+                //working.value=false    
             }
         };
 

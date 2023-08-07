@@ -8,6 +8,7 @@ export default function useStudent(){
     const student=reactive({})
     const router=useRouter()
     const errors=ref([])
+    const error=ref("")
 
     const getStudents=async (schoolId)=>
     { 
@@ -37,10 +38,14 @@ export default function useStudent(){
         }
     }   
 
-    const uploadStudentsList=async(file,schoolId=5)=>{
+    const uploadStudentsList=async({disciplina,file},schoolId)=>{
+        
+        error.value=""
+        
         try{
-            let formData=new FormData()
             
+            let formData=new FormData()
+            formData.append("disciplina",disciplina)
             formData.append("file",file)
             formData.append("schoolId",schoolId)
             await axios.post("/students/upload",formData,{ headers:{"Content-Type": "multipart/form-data"}}) 
@@ -48,7 +53,7 @@ export default function useStudent(){
         }
         catch(exc){
             console.log(exc)
-            handlingError(exc)
+            error.value=exc
         }
     }
 

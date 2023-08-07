@@ -16,7 +16,7 @@
             
             
             <Popup v-if="showPopup" @close-popup="closePopup()">
-                <FileBrowser v-if="showFileBrowser" :school="school"  @upload="onStoredStudent"></FileBrowser>
+                <StudentUpload v-if="showFileBrowser" :school="school"  @upload="onStoredStudent" />
                 <StudentCreate v-else :schoolId="props.schoolId" @storedStudent="onStoredStudent" />
             </Popup>
 
@@ -31,8 +31,8 @@ import useStudent from '@/composables/student.composable'
 import useSchool from '@/composables/school.composable'
 import DataTable from '@/components/DataTable.vue'
 import Popup from '@/components/Popup.vue'
-import FileBrowser from './FileBrowser.vue';
 import StudentCreate from './StudentCreate.vue'
+import StudentUpload from './StudentUpload.vue'
 
 
 export default {
@@ -101,7 +101,7 @@ export default {
             students
         };
     },
-    components: { StudentCreate, DataTable,Popup,FileBrowser }
+    components: { StudentCreate, DataTable, Popup, StudentUpload }
 }
 </script>
 

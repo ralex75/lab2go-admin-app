@@ -70,7 +70,8 @@ const props= defineProps({
     schoolId:{
         type: String,
         required:true
-    }
+    },
+    
 })
 
 const emits=defineEmits(["storedStudent"])

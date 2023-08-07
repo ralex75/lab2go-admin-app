@@ -3,8 +3,9 @@
             
             <ul>
                 <li v-for="sy in schoolYears" :key="sy.id">
-                    <a href="" style="margin-right: 10px;"   v-for="sy in schoolYears">Studenti per anno: {{ sy.year }}</a>
-                    <input type="button" v-if="sy.year==2023" class="btn btn-primary" value="Aggiungi studente" @click.prevent="showPopup=true"/>
+                    <a href=""   v-for="sy in schoolYears">Studenti per anno: {{ sy.year }}</a>
+                    <input type="button" style="margin-left: 10px;"  v-if="sy.year==2023" class="btn btn-primary" value="Aggiungi studente" @click.prevent="showPopup=true;showFileBrowser=false"/>
+                    <input type="button" style="margin-left: 10px;" v-if="sy.year==2023" class="btn btn-primary" value="Aggiungi studenti da file" @click.prevent="showPopup=true;showFileBrowser=true"/>
                 </li>
             </ul>
            
@@ -12,10 +13,11 @@
                 Non ci sono studenti per l'anno: {{ currentYear }}
             </div>
             
-            <!--<FileBrowser v-if="showPopup" :title="popupTitle" @close="showPopup=false" @upload="doUpload"></FileBrowser>-->
+            
             
             <Popup v-if="showPopup" @close-popup="closePopup()">
-                <StudentCreate :schoolId="props.schoolId" @storedStudent="onStoredStudent" />
+                <FileBrowser v-if="showFileBrowser" :school="school"  @upload="onStoredStudent"></FileBrowser>
+                <StudentCreate v-else :schoolId="props.schoolId" @storedStudent="onStoredStudent" />
             </Popup>
 
             <DataTable v-for="d in Object.keys(filteredStudents)" :header="d" :data="filteredStudents[d]" :dataKeys="['name','surname','email']" :colHeaderKeys="['Nome','Cognome','Email']" :deleteCallback="doDeleteStudent" />
@@ -27,13 +29,10 @@
 import { onMounted,ref,computed } from 'vue'
 import useStudent from '@/composables/student.composable'
 import useSchool from '@/composables/school.composable'
-import StudentCreate from '@/components/student/StudentCreate.vue'
 import DataTable from '@/components/DataTable.vue'
 import Popup from '@/components/Popup.vue'
-
-//import StudentCreate from './StudentCreate.vue';
-//import DisplayErrors from '../DisplayErrors.vue';
-//import FileBrowser from '../FileBrowser.vue';
+import FileBrowser from './FileBrowser.vue';
+import StudentCreate from './StudentCreate.vue'
 
 
 export default {
@@ -45,16 +44,17 @@ export default {
     },
     setup(props) {
 
-        const { errors, students, getStudents, destroyStudent, uploadStudentsList } = useStudent();
-        const { getSchoolPartecipationYears, schoolYears } = useSchool();
+        const { errors, students, getStudents, destroyStudent } = useStudent();
+        const { getSchoolPartecipationYears, schoolYears,getSchool,school} = useSchool();
         const currentYear = ref(new Date().getFullYear());
-        const popupTitle  = "Seleziona il file con la lista degli studenti da caricare";
         const showPopup   = ref(false);
-        const working     = ref(false);
+        const showFileBrowser=ref(false)
+        const working     = ref(false)
         
         onMounted(async () => {
-            getStudents(props.schoolId, currentYear.value);
-            getSchoolPartecipationYears(props.schoolId);
+            getSchool(props.schoolId)
+            getStudents(props.schoolId, currentYear.value)
+            getSchoolPartecipationYears(props.schoolId)
         });
         
         const filteredStudents = computed(() => {
@@ -80,24 +80,6 @@ export default {
             await getStudents(props.schoolId);
         };
 
-        const doUpload = async (file) => {
-            try {
-                working.value = true;
-                await uploadStudentsList(file, props.schoolId);
-                students.value.length = 0;
-                setTimeout(async () => {
-                    await getStudents(props.schoolId);
-                    working.value = false;
-                }, 2000);
-            }
-            catch (exc) {  }
-            finally {
-                showUploadPopup();
-            }
-        };
-
-        const showUploadPopup = () => { showPopup.value = !showPopup.value; };
-        
         const onStoredStudent=()=>{
             showPopup.value=false
             getStudents(props.schoolId, currentYear.value);
@@ -108,19 +90,18 @@ export default {
             currentYear,
             showPopup,
             closePopup,
-            popupTitle,
             schoolYears,
             doDeleteStudent,
-            showUploadPopup,
-            doUpload,
+            showFileBrowser,
             onStoredStudent,
             errors,
             working,
+            school,
             filteredStudents,
             students
         };
     },
-    components: { StudentCreate, DataTable,Popup }
+    components: { StudentCreate, DataTable,Popup,FileBrowser }
 }
 </script>
 

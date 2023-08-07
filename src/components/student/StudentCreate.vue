@@ -1,5 +1,6 @@
 <template>
 <div class="container" style="width:600px">
+    <h3 class="text-center">Nuovo studente</h3>
     <form  @submit.prevent="doSave()" novalidate :class="{'was-validated':formValidated}">
         
             <div class="form-group row mt-1" >
@@ -60,26 +61,17 @@
 
 import { reactive,onMounted,computed,ref } from 'vue';
 import useStudent from '@/composables/student.composable';
-import useSchool from '../../composables/school.composable';
 
 const {storeStudent,error}=useStudent()
-const {getSchool,school}=useSchool()
 
-
-const props= defineProps({
-    schoolId:{
-        type: String,
-        required:true
-    },
-    
+const props=defineProps({
+    "school":{type:Object,required:true}
 })
 
 const emits=defineEmits(["storedStudent"])
 
-onMounted(()=>{getSchool(props.schoolId)})
-
 const discipline=computed(()=>{
-    let discipline=school.value.discipline ? JSON.parse(school.value.discipline) : []
+    let discipline=props.school.discipline ? JSON.parse(props.school.discipline) : []
     if(discipline?.length==1)
     {
         //form.disciplina=discipline[0]

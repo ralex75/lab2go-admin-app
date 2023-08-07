@@ -17,7 +17,7 @@
             
             <Popup v-if="showPopup" @close-popup="closePopup()">
                 <StudentUpload v-if="showFileBrowser" :school="school"  @upload="onStoredStudent" />
-                <StudentCreate v-else :schoolId="props.schoolId" @storedStudent="onStoredStudent" />
+                <StudentCreate v-else :school="school" @storedStudent="onStoredStudent" />
             </Popup>
 
             <DataTable v-for="d in Object.keys(filteredStudents)" :header="d" :data="filteredStudents[d]" :dataKeys="['name','surname','email']" :colHeaderKeys="['Nome','Cognome','Email']" :deleteCallback="doDeleteStudent" />

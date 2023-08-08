@@ -93,7 +93,7 @@ const errors=reactive({
 })
 
 const pattern={
-    alpha:"[a-zA-Z]+",
+    alpha:"[a-zA-Z\\s]+",
     email:"[\\w-\.]+@([\\w-]+\.)+[\\w-]{2,4}"
 }
 
@@ -134,7 +134,7 @@ const doSave=async ()=>{
         return
     }
 
-    storeStudent(props.schoolId,form).then(_=>{
+    storeStudent(props.school.id,form).then(_=>{
         emits("storedStudent")
         Object.keys(form).forEach(k=>form[k]="")
         formValidated.value=false

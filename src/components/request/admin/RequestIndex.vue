@@ -5,23 +5,33 @@
     </Popup>
     
    
-    <div class="container" style="margin: 20px;" v-if="isAdmin" >
-        <div class="row">
-            <div class="col-md-4 ml-auto">
-                <RequestFilter v-if="requests.length>0" @dofilter="applyFilter($event)" />
-            </div>
-        </div>
-    </div>
-    
+   
     <div class="col-md-6 alert alert-danger text-center" role="alert" v-if="error"> 
        {{error}}
     </div>
+
+
+
+    <div class="row d-flex justify-content-center" v-if="requests.length==0">
+            <div class="col-md-6 alert alert-info text-center" role="alert" > 
+                Non ci sono richieste di partecipazione al momento.
+            </div>
+    </div>
+    
+   
+    
+
+    <div class="container-fluid" v-else >
+    
+       
+    <div class="col-md-4" v-if="isAdmin">
+        <RequestFilter v-if="requests.length>0" @dofilter="applyFilter($event)" />
+    </div>
+       
     <div class="col-md-6 alert alert-info text-center" role="alert" v-if="filterChanged && filteredRequests?.length==0"> 
         Non ci sono richieste con il filtro selezionato
     </div>
-   
-    <div class="container-fluid">
-    
+
     <table class="table">
         <thead>
             <tr>

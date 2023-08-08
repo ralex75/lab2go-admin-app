@@ -4,7 +4,7 @@
     <thead>
         <tr>
            <th :colspan="colSpanCount" v-if="props.header">
-                {{ props.header }}
+                {{ props.header }} ({{ props.data.length }})
            </th>
         </tr>
         <tr>

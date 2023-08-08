@@ -48,14 +48,18 @@
   </script>
   
   
-   
-  
-  <style scoped>
+  <style>
   .logo{
     
     height: auto;
     max-height: 100px;
   }
   
+  :deep(ul.discipline){
+        list-style-type:decimal;
+        margin: 0;
+        padding: 0;
+        padding-left: 20px;
+  }
   
   </style>

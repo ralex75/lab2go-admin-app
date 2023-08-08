@@ -24,7 +24,7 @@ export default function useSchool(){
                                         id:s.id,
                                         year:s.year,
                                         data:JSON.parse(s.school_json_data),
-                                        disci_accepted:s.disci_accepted
+                                        discipline:JSON.parse(s.discipline)
 
                                     }))
     }  

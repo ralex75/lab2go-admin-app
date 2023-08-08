@@ -17,9 +17,13 @@ const parseZone=(meccode)=>{
 
 }
 
+const formatDiscipline=(discipline)=>{
+    return discipline?.length > 0  ? "<ul class='discipline'>"+discipline.map(d=>`<li>${d}</li>`).join("")+"</ul>" : 'Nessuna'
+}
 
 
 export default {
+    statusMap,
     parseZone,
-    statusMap
+    formatDiscipline
 }

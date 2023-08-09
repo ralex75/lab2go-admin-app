@@ -2,7 +2,7 @@
         <div>
             <div class="row d-flex justify-content-center" v-if="schools.length==0">
                 <div class="col-md-6 alert alert-info text-center" role="alert" > 
-                    Non ci sono scuole registrate al momento.
+                    Non ci sono scuole ammesse al momento per l'anno corrente.
                 </div>
             </div>
             <table class="table" v-else>

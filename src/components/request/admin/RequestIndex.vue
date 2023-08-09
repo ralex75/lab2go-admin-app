@@ -28,18 +28,21 @@
         <RequestFilter v-if="requests.length>0" @dofilter="applyFilter($event)" />
     </div>
        
-    <div class="col-md-6 alert alert-info text-center" role="alert" v-if="filterChanged && filteredRequests?.length==0"> 
+    <!--<div class="col-md-6 alert alert-info text-center" role="alert" v-if="filterChanged && filteredRequests?.length==0"> 
         Non ci sono richieste con il filtro selezionato
-    </div>
+    </div>-->
 
-    <table class="table">
+    <table class="table my-margin">
         <thead>
             <tr>
                 <th colspan="6" style="text-align: left;">
-                    <h6>Numero di richieste attuali: <b>{{ requests.length }}</b></h6>
+                    <div class="col-md-4 alert alert-info " role="alert">
+                        <h6>Numero di richieste totali: <b>{{ requests.length }}</b></h6>
+                        <h6>Numero di richieste dopo filtro: <b>{{ filteredRequests?.length }}</b></h6>
+                    </div>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="doFinalize()" :disabled="!someToFinalize" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':someToFinalize,'btn-light':!someToFinalize}"  value="Finalizza" />
+                    <input type="button" @click="doFinalize()" v-if="someToFinalize" :disabled="!someToFinalize" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':someToFinalize,'btn-light':!someToFinalize}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>
@@ -105,7 +108,7 @@
             }
 
             const someToFinalize=computed(()=>{
-                return filteredRequests.value.filter(r=>r.status!='SUBMITTED').length
+                return filteredRequests.value.filter(r=>r.status!='SUBMITTED' && r.status!='PENDING').length
             })
 
             const applyFilter = ({term,disc})=>{
@@ -197,7 +200,7 @@
         margin:0 5px;
     }
   
-    .box{
+    /*.box{
         border: 1px solid #DDD;
         border-radius: 10px;
     }
@@ -214,6 +217,10 @@
         border: 1px solid #DDD;
         border-radius: 10px;
         padding: 20px 20px 10px 20px;
+    }*/
+
+    .my-margin{
+        margin: 10px 0;
     }
     
 </style>

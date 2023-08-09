@@ -35,49 +35,55 @@
             <br>
             <div class="form-group large">
                 <label>Nome</label>
-                <input type="text" class="form-control" v-model="usr_data.name" />
+                <input type="text" class="form-control" :disabled="!canUpdateData" v-model="usr_data.name" />
             </div>
             <div class="form-group large">
                 <label>Cognome</label>
-                <input type="text" class="form-control" v-model="usr_data.surname" />
+                <input type="text" class="form-control" :disabled="!canUpdateData" v-model="usr_data.surname" />
             </div>
             
             <div class="form-group">
                 <label>Indirizzo mail</label>
-                <input type="text" class="form-control" v-model="usr_data.email" />
+                <input type="text" class="form-control" :disabled="!canUpdateData" v-model="usr_data.email" />
             </div>
             <div class="form-group">
                 <label>Ulteriori Indirizzi mail</label>
-                <input type="text" class="form-control" v-model="usr_data.emailAlt" />
+                <input type="text" class="form-control" :disabled="!canUpdateData" v-model="usr_data.emailAlt" />
             </div>
-            
+            <div class="form-group">
+                <label>Note</label>
+                <textarea class="form-control" :disabled="!canUpdateData" style="resize: none;" id="exampleFormControlTextarea1" rows="3" v-model="usr_data.notes"></textarea>
+            </div>
             <div>
                 <label>Discipline (in ordine di preferenza)</label>
               
                 <section class="discipline" v-for="(d,index) in discipline" :key="index">
                     
-                    <input type="checkbox" v-model="disci_accepted" :value="d" />
+                    <input type="checkbox" :disabled="!canUpdateData" v-model="disci_accepted" :value="d" />
                     
                     <label for="checkbox">{{ d }}</label>
                     
                 </section>
             </div>
                       
-            </div>
-            
         </div>
+            
+    </div>
         
 </div>
 <div class="d-flex align-items-center justify-content-center">
     <div class="col-md-6" v-if="isAdmin">
-        <div v-if="request.status!='DISCARDEDS'" class="d-grid gap-2 ">
-          
+        <div v-if="request.status=='PENDING'" class="row gap-3">
+            <input type="button" class="col btn btn-success w-100 btn-lg" @click="doUpdateRequest('SUBMITTED')" value="Sottometti">
+            <input type="button" class="col btn btn-warning w-100 btn-lg" @click="doUpdateRequest('PENDING')"  value="Rimetti in PENDING">
+            <input type="button" class="col btn btn-danger w-100 btn-lg" @click="doUpdateRequest('REJECT')"  value="Scarta">
+        </div>
+        <div v-else-if="request.status!='DISCARDED'" class="d-grid gap-2 ">
             <input type="button" @click="restoreRequest()" :disabled="request.status=='SUBMITTED'" class="mb-6 btn w-100 btn-lg" :class="{'btn-warning':request.status!='SUBMITTED'}"  value="Ripristina" />
             <input type="button" @click="acceptRequest()" :disabled="!disci_accepted.length" class="mb-6 btn w-100 btn-lg" :class="{'btn-primary':disci_accepted.length}" value="Accetta" />
             <input type="button" @click="rejectRequest()" class="btn w-100  btn-lg btn-danger" value="Rifiuta"  />
         </div>
     </div>
-    
 </div>
 </template>
 
@@ -105,6 +111,10 @@ const Institute=computed(()=>{
 })
 const Plesso=computed(()=>{
     return `<span>${sch_data.sc_tab_plesso}</span> <span>${sch_data.sc_tab_plesso_code}</span>`
+})
+
+const canUpdateData=computed(()=>{
+    return isAdmin.value && request.status!="DISCARDED" && request.status!="PENDING"
 })
 
 /*const closePopup=()=>{

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="container">
         <div class="form-group">
             <label>Ricerca</label>
             <input type="text" class="form-control" v-model="term" @input="applyFilter()" placeholder="ricerca...">
@@ -22,7 +22,6 @@
                 <option value="2">Terza</option>
             </select>
         </div>
-        <!--<button :class="{'btn-primary':isValid}" :disabled="!isValid" @click="applyFilter()">Applica</button>-->
     </div>
 </template>
 

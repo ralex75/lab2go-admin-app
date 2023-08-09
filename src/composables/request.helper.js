@@ -49,7 +49,7 @@ export default function requestHelper(){
         error.value=""
         try{
            
-            if(status=='REJECTED' || status=='SUBMITTED'){ disci_accepted=[]}
+            if(status=='REJECTED' || status=='SUBMITTED' || status=='PENDING'){ disci_accepted=[]}
             
             let {data}=await axios.put(`/requests/${rid}/update`,{usr_data, disci_accepted, status}) 
           

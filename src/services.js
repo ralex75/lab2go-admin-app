@@ -1,14 +1,12 @@
 import axios from 'axios'
 import storage from './composables/storage';
 
- 
-const baseURL={"PROD":'/api',
-                "DEV":'http://localhost:5173/api'}
+ const BASE_URL='/api'
 
 
 // FOR PRODUCTION
 const instance=axios.create({
-  baseURL:baseURL.DEV,
+  baseURL:BASE_URL,
   timeout: 1000,
   withCredentials:true
 });

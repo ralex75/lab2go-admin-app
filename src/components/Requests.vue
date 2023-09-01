@@ -9,11 +9,15 @@ import { defineAsyncComponent,computed } from 'vue';
 const {user}=useUser()
 
 const selectedComponent =computed(()=>{
-    let comp='./request/user/RequestIndex.vue'
-    if(user.value.role.toLowerCase()=='admin')
-    {
-        comp='./request/admin/RequestIndex.vue'
+    const requestView={
+        "user":'./request/user/RequestIndex.vue',
+        "admin":'./request/admin/RequestIndex.vue'
     }
+    
+    //mostra la view corretta in base al ruolo
+    let role=user.value.role.toLowerCase()
+    let comp=requestView[role] || requestView.user
+    
     return defineAsyncComponent(()=>import(comp))
 }) 
 

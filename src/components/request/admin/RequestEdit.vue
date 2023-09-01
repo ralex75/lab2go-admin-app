@@ -75,7 +75,7 @@
     <div class="col-md-6" v-if="isAdmin">
         <div v-if="request.status=='PENDING'" class="row gap-3">
             <input type="button" class="col btn btn-success w-100 btn-lg" @click="doUpdateRequest('SUBMITTED')" value="Sottometti">
-            <input type="button" class="col btn btn-warning w-100 btn-lg" @click="doUpdateRequest('PENDING')"  value="Rimetti in PENDING">
+            <!--<input type="button" class="col btn btn-warning w-100 btn-lg" @click="doUpdateRequest('PENDING')"  value="Rimetti in PENDING">-->
             <input type="button" class="col btn btn-danger w-100 btn-lg" @click="doUpdateRequest('REJECT')"  value="Scarta">
         </div>
         <div v-else-if="request.status!='DISCARDED'" class="d-grid gap-2 ">

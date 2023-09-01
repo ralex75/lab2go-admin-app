@@ -37,7 +37,7 @@
                 <td>{{ r.school_json_data.sc_tab_plesso }}<br><span class="fs-6">{{ r.plesso_mec_code }}</span></td>
                 <td>{{ utils.parseZone(r.plesso_mec_code) }}</td>
                 <td><span v-html="formatDiscipline(r.user_json_data.discipline)"></span></td>
-                <td><span v-html="formatDiscipline(r.disci_accepted)"></span></td>
+                <td><span v-if="statusIsCommitted(r.status)" v-html="formatDiscipline(r.disci_accepted)"></span></td>
                 <td>{{ parseStatus(r.status) }}</td>
                 <td class="action">
                     <a href="" v-if="canUpdate(r.status)" @click.prevent="showPopup(r,'REQUEST')">Gestisci</a>
@@ -54,6 +54,7 @@
     import Popup from '@/components/Popup.vue'
     import { ref, onMounted, shallowRef } from 'vue'
     import utils from '@/utils'
+
 
     export default {
         name:'RequestIndex',
@@ -83,8 +84,11 @@
                 
                 //utente non deve vedere le modifiche dello stato temporaneo alla tabella
                 //solo quando sono COMMITTED può vedere lo stato che è stato deciso per la sua richiesta
-                if(status=='ACCEPTED' || status=="REJECTED") return utils.statusMap["SUBMITTED"]
-                return utils.statusMap[status]
+                return !statusIsCommitted(status) ? utils.statusMap["SUBMITTED"] : utils.statusMap[status]
+            }
+
+            const statusIsCommitted=(status)=>{
+                return status.indexOf("_COMMIT")>-1
             }
 
             const applyFilter = ({term,disc})=>{
@@ -142,7 +146,8 @@
                 formatDiscipline,
                 updatedRequest,
                 canUpdate,
-                parseStatus
+                parseStatus,
+                statusIsCommitted
             }
         },
         components:{Popup,RequestEdit}

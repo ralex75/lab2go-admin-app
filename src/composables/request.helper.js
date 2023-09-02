@@ -60,13 +60,13 @@ export default function requestHelper(){
         }
     }
 
-    const finalize=async()=>{
+    const commitRequests=async()=>{
         
         error.value=""
         
         try{
             
-            let {data}=await axios.put(`/requests/finalize`) 
+            let {data}=await axios.put(`/requests/commit`) 
             if(data.exc){ throw new Error("Si è verificato un problema nell'inserimento dati") }
         }
         catch(exc){
@@ -83,6 +83,6 @@ export default function requestHelper(){
         getRequests,
         getRequest,
         saveRequest,
-        finalize
+        commitRequests,
     }
 }

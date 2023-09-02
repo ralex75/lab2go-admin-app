@@ -42,7 +42,7 @@
                     </div>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="doFinalize()" v-if="someToFinalize" :disabled="!someToFinalize" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':someToFinalize,'btn-light':!someToFinalize}"  value="Finalizza" />
+                    <input type="button" @click="doCommitRequests()" v-if="requestsToCommit" :disabled="!requestsToCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':requestsToCommit,'btn-light':!requestsToCommit}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>
@@ -93,7 +93,7 @@
         setup(){
             
             const {isAdmin}=useUser()
-            const {requests,getRequests,finalize,error} = useRequest()
+            const {requests,getRequests,commitRequests,error} = useRequest()
             const filteredRequests=ref([])
             const filterChanged=ref(false)
             const selectedComponent=shallowRef(null)
@@ -107,7 +107,7 @@
                 })
             }
 
-            const someToFinalize=computed(()=>{
+            const requestsToCommit=computed(()=>{
                 return filteredRequests.value.filter(r=>r.status!='SUBMITTED' && r.status!='PENDING').length
             })
 
@@ -158,8 +158,8 @@
                 closePopup()
             }
 
-            const doFinalize=async ()=>{
-                finalize().then(_=>getAllRequests())
+            const doCommitRequests=async ()=>{
+                commitRequests().then(_=>getAllRequests())
          
             }
 
@@ -178,8 +178,8 @@
                 applyFilter,
                 showFilter,
                 updatedRequest,
-                someToFinalize,
-                doFinalize,
+                requestsToCommit,
+                doCommitRequests,
                 error
             }
         },

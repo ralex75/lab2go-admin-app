@@ -1,5 +1,14 @@
 <template>
+    
+    <Popup v-if="showCreateUser" @close-popup="showCreateUser=false">
+        <CreateUser @userCreated="onUserCreated" />
+    </Popup>
+
+    
+
     <div class="col-md-6">
+    <button class="btn btn-primary" @click="showCreateUser=true" >Nuovo utente</button>
+    <br><br>
     <table class="table">
         <thead>
             <tr>
@@ -14,8 +23,8 @@
                 <td>{{ u.email }}</td>
                 <td>{{ u.role }}</td>
                 <td>
-                    <select v-model="u.selectedRole">
-                       <option v-for="r in roles" :value="r.v">{{ r.txt }}</option>
+                    <select v-model="u.selectedRole" class="form-select">
+                       <option v-for="r in roles" :value="r">{{ r }}</option>
                     </select>
                 </td>
                 <td>
@@ -29,18 +38,26 @@
 <script setup>
 
 import { ref,onMounted} from 'vue';
+import Popup from '@/components/Popup.vue'
 import useUserAccount from '@/composables/accounts.composable';
+import CreateUser from '@/components/account/CreateUser.vue'
+import roles from '../roles'
 
-
-const roles=[{'v':'','txt':'BLOCCATO'},{'v':'DOCENTE','txt':'DOCENTE'},{'v':'ADMIN','txt':'ADMIN'},{'v':'SUPER-ADMIN','txt':'SUPER-ADMIN'}]
 const {getAccounts,accounts,account,updateAccount} =useUserAccount()
 
 const mappedAccounts=ref([])
+const showCreateUser=ref(false)
 
 onMounted(async ()=>{
     await getAccounts()
     mappedAccounts.value=accounts.value.map(a=>({...a,...{"selectedRole":a.role}}))
 })
+
+const onUserCreated=async ()=>{
+    showCreateUser.value=false
+    await getAccounts()
+    mappedAccounts.value=accounts.value.map(a=>({...a,...{"selectedRole":a.role}}))
+}
 
 
 const doSave=(u)=>{

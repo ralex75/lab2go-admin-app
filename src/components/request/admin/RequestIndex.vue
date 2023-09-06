@@ -42,7 +42,7 @@
                     </div>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="doCommitRequests()" v-if="requestsToCommit" :disabled="!requestsToCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':requestsToCommit,'btn-light':!requestsToCommit}"  value="Finalizza" />
+                    <input type="button" @click="doCommitRequests()" v-if="!requestsInPen" :disabled="!requestsToCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':requestsToCommit,'btn-light':!requestsToCommit}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>

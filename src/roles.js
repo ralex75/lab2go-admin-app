@@ -1,4 +1,6 @@
 export default {
-    "DOCENTE":"docente",
-    "ADMIN":"admin"
+    "DISABILITATO":"DISABILITATO",
+    "COORDINATORE":"COORDINATORE",
+    "DOCENTE":"DOCENTE",
+    "ADMIN":"ADMIN"
 }

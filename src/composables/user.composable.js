@@ -28,11 +28,11 @@ export default function useUser(){
         return user.value!=null
     })
 
-    const signUp=async ({name,surname,email,password})=>{
+    const signUp=async ({name,surname,email,password,role})=>{
         try{
            
-            await axios.post("/user/create",{name,surname,email,password})
-            router.push({name:'home.index'})
+            await axios.post("/user/create",{name,surname,email,password,role})
+            //router.push({name:'home.index'})
         }
         catch(exc){
             let msg=(exc.type && exc.type=="duplicated") ? "Utente già registrato.": "Errore generico"

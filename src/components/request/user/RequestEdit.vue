@@ -51,6 +51,10 @@
                 <label>Ulteriori Indirizzi mail</label>
                 <input type="text" class="form-control" v-model="usr_data.emailAlt" />
             </div>
+            <div class="form-group">
+                <label>Note</label>
+                <textarea class="form-control" style="resize: none;" id="usernote" rows="3" v-model="usr_data.notes"></textarea>
+            </div>
             
             <div class="form-group">
                 <label>Discipline</label>     

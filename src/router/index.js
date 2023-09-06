@@ -9,8 +9,9 @@ const routeGuard=(to, from, next)=>{
   
  
   let user=storage.get("session")
+  
   let routeRoles=to.meta.roles || []
-  const allowAccess = routeRoles.length==0 || (user && routeRoles.some(r=>user.role.toLowerCase().indexOf(r)>-1))
+  const allowAccess = routeRoles.length==0 || (user && routeRoles.some(r=>user.role.indexOf(r)>-1))
   if(!allowAccess){
     return next('/login'); //go to '/login';
   }
@@ -69,7 +70,6 @@ const routes = [
       page:{
         name:"Logout",
       },
-      
    },
   },
   {
@@ -93,12 +93,12 @@ const routes = [
     props:true,
   },
   {
-    path:'/accounts',
+    path:'/gestione',
     name:'useraccount.index',
     component: ()=>import('@/components/UserAccount.vue'),
     meta: {
         page:{
-        name:"Accounts",
+        name:"Gestione",
         title: "Lista account",
         subtitle: "",
       },

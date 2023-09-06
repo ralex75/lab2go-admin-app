@@ -34,7 +34,7 @@
     //voci di menu gestite dal ruolo utente
     const items=computed(()=>{
        
-        let userRole=(user.value?.role || "").toLowerCase();
+        let userRole=(user.value?.role || "");
         let routes=router.options.routes
       
         //esclude login logout e registrati

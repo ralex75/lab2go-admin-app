@@ -11,7 +11,7 @@
                     <router-link v-if="!user && path!='/login'" class="btn btn-outline-primary btn-margin-right" to="/login">Accedi</router-link>
                     <router-link v-if="user" class="btn btn-outline-primary btn-margin-right" to="/logout">Esci</router-link>
                 </li>
-                <li class="nav-item"><router-link v-if="!user && path!='/signup'"  class="btn btn-outline-success btn-margin-right" to="/signup">Registrati</router-link></li>
+                <!--<li class="nav-item"><router-link v-if="!user && path!='/signup'"  class="btn btn-outline-success btn-margin-right" to="/signup">Registrati</router-link></li>-->
         </ul>
 </div>
 

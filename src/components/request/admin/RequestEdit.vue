@@ -80,7 +80,7 @@
         </div>
         <div v-else-if="request.status!='DISCARDED'" class="d-grid gap-2 ">
             <input type="button" @click="restoreRequest()" :disabled="request.status=='SUBMITTED'" class="mb-6 btn w-100 btn-lg" :class="{'btn-warning':request.status!='SUBMITTED'}"  value="Ripristina" />
-            <input type="button" @click="acceptRequest()" :disabled="!disci_accepted.length" class="mb-6 btn w-100 btn-lg" :class="{'btn-primary':disci_accepted.length}" value="Accetta" />
+            <input type="button" @click="acceptRequest()" :disabled="acceptButtonIsDisabled" class="mb-6 btn w-100 btn-lg" :class="{'btn-primary':disci_accepted.length}" value="Accetta" />
             <input type="button" @click="rejectRequest()" class="btn w-100  btn-lg btn-danger" value="Rifiuta"  />
         </div>
     </div>
@@ -106,6 +106,9 @@ const discipline=usr_data.discipline
 const disci_accepted=ref(requestCpy.disci_accepted || [])
 const emit=defineEmits(['closePopup','updatedRequest'])
 
+const acceptButtonIsDisabled=computed(()=>{
+    return !disci_accepted.length || request.status!='SUBMITTED'
+})
 const Institute=computed(()=>{
     return `<span>${sch_data.sc_tab_istituto}</span> <span>${sch_data.sc_tab_code}</span>`
 })

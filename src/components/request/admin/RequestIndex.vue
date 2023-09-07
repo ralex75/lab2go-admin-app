@@ -42,7 +42,7 @@
                     </div>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="doCommitRequests()" v-if="!requestsInPen" :disabled="!requestsToCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':requestsToCommit,'btn-light':!requestsToCommit}"  value="Finalizza" />
+                    <input type="button" @click="doCommitRequests()"  :disabled="!canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-light':!canCommit}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>
@@ -107,8 +107,8 @@
                 })
             }
 
-            const requestsToCommit=computed(()=>{
-                return filteredRequests.value.filter(r=>r.status!='SUBMITTED' && r.status!='PENDING').length
+            const canCommit=computed(()=>{
+                return !filteredRequests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
             })
 
             const applyFilter = ({term,disc})=>{
@@ -178,7 +178,7 @@
                 applyFilter,
                 showFilter,
                 updatedRequest,
-                requestsToCommit,
+                canCommit,
                 doCommitRequests,
                 error
             }

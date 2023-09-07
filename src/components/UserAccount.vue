@@ -4,10 +4,17 @@
         <CreateUser @userCreated="onUserCreated" />
     </Popup>
 
-    
-
+       
     <div class="col-md-6">
-    <button class="btn btn-primary" @click="showCreateUser=true" >Nuovo utente</button>
+        <div class="row">
+            <div class="alert  text-center" :class="{'alert-info':!downloadDBError,'alert-danger':downloadDBError}" role="alert" v-if="showFeedback"> 
+                {{feedbackMsg}}
+            </div>
+        </div>
+        <div class="command-actions">
+            <button class="btn btn-primary" @click="showCreateUser=true" >Nuovo utente</button>
+            <button class="btn btn-success" @click="doDownloadDB()" >DB Download</button>
+        </div>
     <br><br>
     <table class="table">
         <thead>
@@ -37,16 +44,22 @@
 </template>
 <script setup>
 
-import { ref,onMounted} from 'vue';
+import { ref,onMounted,computed} from 'vue';
 import Popup from '@/components/Popup.vue'
 import useUserAccount from '@/composables/accounts.composable';
+import useUtils from '@/composables/utils.composable';
 import CreateUser from '@/components/account/CreateUser.vue'
 import roles from '../roles'
 
 const {getAccounts,accounts,account,updateAccount} =useUserAccount()
+const {downloadDB,error:downloadDBError}=useUtils()
 
 const mappedAccounts=ref([])
 const showCreateUser=ref(false)
+const showFeedback = ref(false)
+const feedbackMsg=computed(()=>{
+    return !downloadDBError.value ? 'Download DB completato': downloadDBError.value
+})
 
 onMounted(async ()=>{
     await getAccounts()
@@ -67,4 +80,21 @@ const doSave=(u)=>{
     })
    
 }
+
+const doDownloadDB=()=>{
+    showFeedback.value=false
+    downloadDB().then(_=>showFeedback.value=true)
+}
+
 </script>
+
+<style scoped>
+
+.command-actions{
+    display: flex;
+    justify-content: flex-start;
+    vertical-align: middle;
+    gap: 6px;
+}
+
+</style>

@@ -76,7 +76,7 @@
         <div v-if="request.status=='PENDING'" class="row gap-3">
             <input type="button" class="col btn btn-success w-100 btn-lg" @click="doUpdateRequest('SUBMITTED')" value="Sottometti">
             <!--<input type="button" class="col btn btn-warning w-100 btn-lg" @click="doUpdateRequest('PENDING')"  value="Rimetti in PENDING">-->
-            <input type="button" class="col btn btn-danger w-100 btn-lg" @click="doUpdateRequest('REJECT')"  value="Scarta">
+            <input type="button" class="col btn btn-danger w-100 btn-lg" @click="doUpdateRequest('DISCARDED')"  value="Scarta">
         </div>
         <div v-else-if="request.status!='DISCARDED'" class="d-grid gap-2 ">
             <input type="button" @click="restoreRequest()" :disabled="request.status=='SUBMITTED'" class="mb-6 btn w-100 btn-lg" :class="{'btn-warning':request.status!='SUBMITTED'}"  value="Ripristina" />
@@ -107,7 +107,7 @@ const disci_accepted=ref(requestCpy.disci_accepted || [])
 const emit=defineEmits(['closePopup','updatedRequest'])
 
 const acceptButtonIsDisabled=computed(()=>{
-    return !disci_accepted.length || request.status!='SUBMITTED'
+    return !disci_accepted.value.length
 })
 const Institute=computed(()=>{
     return `<span>${sch_data.sc_tab_istituto}</span> <span>${sch_data.sc_tab_code}</span>`
@@ -136,12 +136,14 @@ const doUpdateRequest=async(status="UNDEFINED")=>{
     }
 }
 
+//ripristina a SUBMITTED
 const restoreRequest=()=>{
    
    doUpdateRequest('SUBMITTED')
 
 }
 
+//accetta la richiesta 
 const acceptRequest=async()=>{
     
    

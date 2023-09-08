@@ -15,8 +15,7 @@
                 <input type="file" ref="upload" class="form-control" @change="handleFileUpload" lang="it" accept=".txt" id="inputGroupFile02" >
             </div>
             
-            {{ upload }}
-
+           
             <div class="row">
                 <div class="col text-center">
                     <button type="button" :disabled="isDisabled" class="btn w-100" @click="doUpload" :class="{'btn-primary':!isDisabled}">Carica</button>

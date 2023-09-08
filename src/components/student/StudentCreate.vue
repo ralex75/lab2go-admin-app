@@ -2,7 +2,6 @@
 <div class="container" style="width:600px">
     <h3 class="text-center">Nuovo studente</h3>
     <form  @submit.prevent="doSave()" novalidate :class="{'was-validated':formValidated}">
-        
             <div class="form-group row mt-1" >
                 <label for="name" class="col-sm-2 col-form-label">*Nome</label>
                 <div class="col-sm-10">
@@ -22,7 +21,7 @@
                 </div>
             </div>
             <div class="form-group row mt-1" >
-                <label for="email" class="col-sm-2 control-label">*Email</label>
+                <label for="email" class="col-sm-2 col-form-label">*Email</label>
                 <div class="col-sm-10">
                     <input type="text" name="email" class="form-control" id="email" required :pattern="pattern.email" v-model="form.email" placeholder="Email studente">
                     <div :class="{'invalid-feedback':errors.email}">
@@ -33,7 +32,7 @@
             
         
             <div class="form-group row mt-1" >
-                <label for="disciplina" class="col-sm-2 control-label">Disciplina</label>
+                <label for="disciplina" class="col-sm-2 col-form-label">Disciplina</label>
                 <div class="col-sm-10">
                     <select class="form-select" required aria-label="Default select example" v-model="form.disciplina">
                         <option selected value="" v-if="discipline?.length>0 && !form.disciplina">Seleziona disciplina</option>

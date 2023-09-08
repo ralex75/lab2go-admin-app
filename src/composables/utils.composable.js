@@ -1,12 +1,16 @@
 import axios from "../services"
 import { reactive,ref,computed } from 'vue'
-import { useRouter } from "vue-router"
+
 
 
 
 export default function useUtils(){
     
     const error=ref(null)
+
+    const downloadStudents=async ()=>{
+        
+    }
 
     const downloadDB=async ()=>{
         
@@ -50,7 +54,8 @@ export default function useUtils(){
     
     return {
         error,
-        downloadDB
-      
+        downloadDB,
+        downloadStudents
+        
     }
 }

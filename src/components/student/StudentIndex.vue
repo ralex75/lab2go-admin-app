@@ -21,6 +21,10 @@
                 <StudentCreate v-else :school="school" @storedStudent="onStoredStudent" />
             </Popup>
             
+           
+
+            <span v-html="schoolInfo"></span>
+
             <DataTable v-for="d in Object.keys(filteredStudents)" :header="d" :data="filteredStudents[d]" :dataKeys="['name','surname','email']" :colHeaderKeys="['Nome','Cognome','Email']" :deleteCallback="doDeleteStudent" />
         
     </div>
@@ -65,6 +69,8 @@ export default {
             getStudents(props.schoolId)
         })
 
+       
+
             
         const currentYear=computed(()=>{
            
@@ -100,6 +106,16 @@ export default {
             showPopup.value=false
             getStudents(props.schoolId);
         }
+        const schoolInfo=computed(()=>{
+            
+            let sd=school.value
+            if(!sd.school_json_data) return
+            sd=JSON.parse(sd.school_json_data)
+            return `<p style="margin:30px;">
+                       <h5>${sd.sc_tab_plesso}</h5>
+                       ${sd.sc_tab_indirizzo} 
+                    </p>`
+        })
 
         return {
             props,
@@ -115,7 +131,9 @@ export default {
             school,
             filteredStudents,
             students,
-            route
+            route,
+            schoolInfo
+            
         };
     },
     components: { StudentCreate, DataTable, Popup, StudentUpload }

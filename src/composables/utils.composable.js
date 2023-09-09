@@ -8,16 +8,19 @@ export default function useUtils(){
     
     const error=ref(null)
 
-    const downloadStudents=async ()=>{
-        
+    const dumpStudents=(schoolId,disc='ALL')=>{
+        return downloadFile(`/dump/students?scid=${schoolId}&disc=${disc}`)
+    }
+    const dumpDB=()=>{
+        return downloadFile("/dump/db")
     }
 
-    const downloadDB=async ()=>{
+    const downloadFile=async (url)=>{
         
         error.value=""
         let filename=null
 
-        axios.get('/dbbackup', {
+        axios.get(url, {
             responseType: 'blob',
             withCredentials:true
         })
@@ -54,8 +57,8 @@ export default function useUtils(){
     
     return {
         error,
-        downloadDB,
-        downloadStudents
+        dumpDB,
+        dumpStudents
         
     }
 }

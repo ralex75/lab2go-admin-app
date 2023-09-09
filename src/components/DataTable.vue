@@ -1,6 +1,6 @@
 <template>
 
-<table class="table">
+<table class="table" style="table-layout: fixed;">
     <thead>
         <tr>
            <th :colspan="colSpanCount" v-if="props.header">

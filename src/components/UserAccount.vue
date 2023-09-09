@@ -13,7 +13,7 @@
         </div>
         <div class="command-actions">
             <button class="btn btn-primary" @click="showCreateUser=true" >Nuovo utente</button>
-            <button class="btn btn-success" @click="doDownloadDB()" >DB Download</button>
+            <button class="btn btn-success" @click="doDumpDB()" >DB Download</button>
         </div>
     <br><br>
     <table class="table">
@@ -52,7 +52,7 @@ import CreateUser from '@/components/account/CreateUser.vue'
 import roles from '../roles'
 
 const {getAccounts,accounts,account,updateAccount} =useUserAccount()
-const {downloadDB,error:downloadDBError}=useUtils()
+const {dumpDB,error:downloadDBError}=useUtils()
 
 const mappedAccounts=ref([])
 const showCreateUser=ref(false)
@@ -81,9 +81,9 @@ const doSave=(u)=>{
    
 }
 
-const doDownloadDB=()=>{
+const doDumpDB=()=>{
     showFeedback.value=false
-    downloadDB().then(_=>showFeedback.value=true)
+    dumpDB().then(_=>showFeedback.value=true)
 }
 
 </script>

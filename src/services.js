@@ -2,7 +2,7 @@ import axios from 'axios'
 import storage from './composables/storage';
 import router from './router'
 
-const BASE_URL='/api'
+const BASE_URL='api'
 
 
 // FOR PRODUCTION

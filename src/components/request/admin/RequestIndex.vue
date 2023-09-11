@@ -108,7 +108,7 @@
             }
 
             const canCommit=computed(()=>{
-                return !filteredRequests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
+                return !requests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
             })
 
             const applyFilter = ({term,disc})=>{

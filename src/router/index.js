@@ -102,7 +102,7 @@ const routes = [
         title: "Lista account",
         subtitle: "",
       },
-      roles:[roles.DOCENTE,roles.ADMIN]
+      roles:[roles.ADMIN]
    },
    
   },

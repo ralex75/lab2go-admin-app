@@ -64,6 +64,7 @@ export default function useUser(){
         await axios.post("/user/logout").finally(_=>{
             storage.unset(STORAGE_KEY)
             user.value=null
+            router.push({name:'home.index'})
         })
        
     }

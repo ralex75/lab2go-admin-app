@@ -2,12 +2,13 @@ import axios from 'axios'
 import storage from './composables/storage';
 import router from './router'
 
-const BASE_URL='/lab2go/admin/api'
+
+const BASE_URL={"DEV":'/api',"PROD":'/lab2go/admin/api'}
 
 
 // FOR PRODUCTION
 const instance=axios.create({
-  baseURL:BASE_URL,
+  baseURL:BASE_URL.PROD,
   timeout: 1000,
   withCredentials:true
 });

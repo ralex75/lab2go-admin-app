@@ -12,7 +12,9 @@
                         <th>Indirizzo</th>
                         <th>Sezione</th>
                         <th>Discipline</th>
-                        <th></th>
+                        <th>      
+                            <button type="button"  class="btn btn-outline-success" style="width: 50%;" @click.prevent="doDumpStudents(0)">Dump</button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -25,8 +27,8 @@
                           
                             <div class="action">
                             <!--<button type="button" class="btn btn-primary btn-ms" @click.prevent="editSchool(s.id)">Modifica</button>-->
-                                <button type="button" class="btn btn-outline-success" @click.prevent="doDumpStudents(s.id)">Dump</button>
-                                <router-link class="btn btn-outline-primary" :to="{ name: 'student.index', params: { 'schoolId': s.id,'year':currentYear }}">Studenti</router-link>
+                                <button type="button" :disabled="!s.students.length" class="btn btn-outline-success" @click.prevent="doDumpStudents(s.id)">Dump</button>
+                                <router-link class="btn btn-outline-primary" :to="{ name: 'student.index', params: { 'schoolId': s.id }}">Studenti</router-link>
                             </div>
                         </td>
                     </tr>
@@ -57,7 +59,7 @@
     
     const currentYear=new Date().getFullYear()
 
-    const doDeleteSchool = async (id) => {
+    /*const doDeleteSchool = async (id) => {
         if (!window.confirm("Sei sicuro?")) return;
         await deleteSchool(id);
         await getSchools();
@@ -69,7 +71,7 @@
 
     const doSearch=(value)=>{
         getSchools({"keyword":value})
-    }
+    }*/
     
     const doDumpStudents=(schoolId)=>{
         dumpStudents(schoolId)

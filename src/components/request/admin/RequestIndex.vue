@@ -42,7 +42,7 @@
                     </div>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="doCommitRequests()"  :disabled="!canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-light':!canCommit}"  value="Finalizza" />
+                    <input type="button" @click="doCommitRequests()" :disabled="canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-light':!canCommit}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>
@@ -59,16 +59,16 @@
         <tbody>
             <tr v-for="r in filteredRequests" :key="r.id">
                 <td>{{ r.id }}</td>
-                <td>{{ r.school_json_data.sc_tab_istituto }}<br><span class="fs-6">{{ r.school_mec_code }}</span></td>
-                <td>{{ r.school_json_data.sc_tab_plesso }}<br><span class="fs-6">{{ r.plesso_mec_code }}</span></td>
+                <td>{{ r.school_json_data.sc_tab_istituto }}<br><span class="fs-6">{{ r.school_mec_code.toUpperCase() }}</span></td>
+                <td>{{ r.school_json_data.sc_tab_plesso }}<br><span class="fs-6">{{ r.plesso_mec_code.toUpperCase() }}</span></td>
                 <td>{{ utils.parseZone(r.plesso_mec_code) }}</td>
                 <td><span v-html="formatDiscipline(r.user_json_data.discipline)"></span></td>
                 <td><span v-html="formatDiscipline(r.disci_accepted)"></span></td>
                 <td>{{ r.status }}</td>
                 <td class="action">
                     
-                       <span style="color:green"><font-awesome-icon icon="fa-solid fa-eye" title="visualizza richiesta" @click="showPopup(r,'REQUEST')" /></span>
-                       <span v-if="r.user_json_data.notes" style="color:dodgerblue"><font-awesome-icon icon="fa-solid fa-info-circle" title="mostra note" @click="showPopup(r.user_json_data.notes,'NOTES')"  /></span>
+                    <span style="color:green"><font-awesome-icon icon="fa-solid fa-eye" title="visualizza richiesta" @click="showPopup(r,'REQUEST')" /></span>
+                    <span v-if="r.user_json_data.notes" style="color:dodgerblue"><font-awesome-icon icon="fa-solid fa-info-circle" title="mostra note" @click="showPopup(r.user_json_data.notes,'NOTES')"  /></span>
                    
                 </td>
             </tr>
@@ -106,7 +106,8 @@
                     filteredRequests.value=Object.assign(requests.value)
                 })
             }
-
+            //abilita o disabilita pulsante di commit
+            //per abilitare tutte le richieste devono essere accettate o rifiutate
             const canCommit=computed(()=>{
                 return !requests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
             })

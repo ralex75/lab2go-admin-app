@@ -12,7 +12,8 @@ export default function useStudent(){
 
     const getStudents=async (schoolId)=>
     { 
-        let {data}=await axios.get(`/students/${schoolId}`) 
+        
+        let {data}=await axios.get(`/schools/${schoolId}/students`) 
         students.value=data.students
     }  
     

@@ -83,7 +83,7 @@ const routes = [
         subtitle:"",
         description:""
        },
-       roles:[roles.DOCENTE,roles.ADMIN]
+       roles:[roles.DOCENTE,roles.ADMIN,roles.COORDINATORE]
     }
   },
   {
@@ -117,7 +117,7 @@ const routes = [
           subtitle:"",
           description:"lista delle richieste"
         },
-        roles:[roles.DOCENTE,roles.ADMIN]
+        roles:[roles.DOCENTE,roles.ADMIN,roles.COORDINATORE]
     }
   },
   /*{

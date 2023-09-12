@@ -88,13 +88,13 @@ export default function useSchool(){
         }
     }   
 
-    const saveSchool=async (id)=>
+    const saveSchool=async (id,school)=>
     { 
         errors.value=''
         try{
             
-            await axios.put(`/schools/${id}`,school.value) 
-            await router.push({name:'schools.index'})
+            await axios.put(`/schools/${id}`,{"school":school}) 
+            
         }
         catch(exc){
             handlingError(exc)

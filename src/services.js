@@ -3,12 +3,11 @@ import storage from './composables/storage';
 import router from './router'
 
 
-const BASE_URL={"DEV":'/api',"PROD":'/lab2go/admin/api'}
-
+const BASE_URL={"DEV":'/api',"PROD":'/lab2go/debug/api'}
 
 // FOR PRODUCTION
 const instance=axios.create({
-  baseURL:BASE_URL.PROD,
+  baseURL:BASE_URL.DEV,
   timeout: 1000,
   withCredentials:true
 });

@@ -58,7 +58,7 @@
 
 <script setup>
 
-import { reactive,onMounted,computed,ref } from 'vue';
+import { reactive,computed,ref } from 'vue';
 import useStudent from '@/composables/student.composable';
 
 const {storeStudent,error}=useStudent()
@@ -114,7 +114,6 @@ const formIsValid=async ()=>{
     Object.keys(errors).forEach(k=>{
         validations[k].forEach(fn=>{
             errors[k]=""
-            
             let res=(fn['test'] ? fn.test(form[k]) : fn(form[k]))
             if(!res){
                 errors[k]="Valore non valido"

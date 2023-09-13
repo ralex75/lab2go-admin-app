@@ -54,6 +54,12 @@
     height: auto;
     max-height: 100px;
   }
+
+  input[type=text]:read-only,textarea:read-only{
+    background-color: #DDD;
+    color: #000;
+    pointer-events: none;
+  }
   
   :deep(ul.discipline){
         list-style-type:decimal;

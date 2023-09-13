@@ -8,8 +8,8 @@ export default function useUtils(){
     
     const error=ref(null)
 
-    const dumpStudents=(schoolId,disc='ALL')=>{
-        return downloadFile(`/dump/students?scid=${schoolId}&disc=${disc}`)
+    const dumpStudents=(schoolId,{status='ALL',sdate='2023-09-01'})=>{
+        return downloadFile(`/dump/students?scid=${schoolId}&status=${status}&sdate=${sdate}`)
     }
     const dumpDB=()=>{
         return downloadFile("/dump/db")

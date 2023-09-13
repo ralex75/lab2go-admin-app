@@ -2,7 +2,7 @@ import axios from "../services"
 import { ref,computed } from 'vue'
 import {useRouter}  from "vue-router"
 import storage from "./storage"
-
+import roles from "../roles"
 
 const user=ref(null)
 
@@ -18,10 +18,19 @@ export default function useUser(){
      
         let cu=storage.get(STORAGE_KEY)
         user.value=cu || null
+     
     }
 
     const isAdmin=computed(()=>{
-        return user.value && user.value.role=='ADMIN'
+        return user.value && user.value.role==roles.ADMIN
+    })
+
+    const isCoordinator=computed(()=>{
+        return user.value && user.value.role==roles.COORDINATORE
+    })
+
+    const isDocente=computed(()=>{
+        return user.value && user.value.role==roles.DOCENTE
     })
 
     const isLoggedIn=computed(()=>{
@@ -64,7 +73,7 @@ export default function useUser(){
         await axios.post("/user/logout").finally(_=>{
             storage.unset(STORAGE_KEY)
             user.value=null
-            router.push({name:'home.index'})
+            router.push({name:'login.index'})
         })
        
     }
@@ -81,6 +90,8 @@ export default function useUser(){
        signIn,
        signOut,
        isAdmin,
+       isCoordinator,
+       isDocente,
        isLoggedIn
     }
 }

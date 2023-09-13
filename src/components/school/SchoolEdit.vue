@@ -38,11 +38,12 @@
                 </div>
                 <div class="form-group col-md-9">
                     <label>Tutors</label>
-                    <textarea class="form-control" id="tutors" style="resize: none;" rows="3" v-model="form.tutors"></textarea>
+                    {{ canEditTutors }}
+                    <textarea class="form-control" id="tutors" style="resize: none;" :readonly="!canEditTutors" rows="3" v-model="form.tutors"></textarea>
                 </div>
                 <br>
                 <div class="col-md-9">
-                    <input type="submit"  :disabled="!dataIsChanged" class="btn w-100  btn-lg btn-primary"  value="Aggiorna"  />
+                    <input type="submit" :disabled="!dataIsChanged" class="btn w-100  btn-lg btn-primary"  value="Aggiorna"  />
                 </div>
                 
         </form>
@@ -56,12 +57,15 @@
 <script setup>
 import { ref,computed,watchEffect,reactive } from 'vue';
 import useSchool from '@/composables/school.composable'
+import useUser from '@/composables/user.composable'
 
 const props=defineProps({"schoolId":{type:Number,required:true}})
 const emit=defineEmits("onSchoolUpdated")
 const { school, getSchool, saveSchool, errors } = useSchool();
+const {isDocente}=useUser()
 const schoolId=ref(props.schoolId)
 const form=reactive({"tutors":""})
+
 
 watchEffect(() =>
         getSchool(schoolId.value).then(res=>{
@@ -84,6 +88,10 @@ const pattern={
     alpha:"[a-zA-Z\\s]+",
     email:"[\\w-\.]+@([\\w-]+\.)+[\\w-]{2,4}"
 }
+
+const canEditTutors=computed(()=>{
+    return !isDocente
+})
 
 const formValidated=ref(false)
 
@@ -124,4 +132,6 @@ const formIsValid=async ()=>{
 .form-group{
     margin: 6px 0;
 }
+
+
 </style>

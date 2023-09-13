@@ -1,7 +1,7 @@
 <template>
     
-    <Popup v-if="showCreateUser" @close-popup="showCreateUser=false">
-        <CreateUser @userCreated="onUserCreated" />
+    <Popup v-if="showSignup" @close-popup="showSignup=false">
+        <Signup @userCreated="onUserCreated" />
     </Popup>
 
        
@@ -12,7 +12,7 @@
             </div>
         </div>
         <div class="command-actions">
-            <button class="btn btn-primary" @click="showCreateUser=true" >Nuovo utente</button>
+            <button class="btn btn-primary" @click="showSignup=true" >Nuovo utente</button>
             <button class="btn btn-success" @click="doDumpDB()" >DB Download</button>
         </div>
     <br><br>
@@ -48,14 +48,14 @@ import { ref,onMounted,computed} from 'vue';
 import Popup from '@/components/Popup.vue'
 import useUserAccount from '@/composables/accounts.composable';
 import useUtils from '@/composables/utils.composable';
-import CreateUser from '@/components/account/CreateUser.vue'
+import Signup from '@/components/account/Signup.vue'
 import roles from '../roles'
 
 const {getAccounts,accounts,account,updateAccount} =useUserAccount()
 const {dumpDB,error:downloadDBError}=useUtils()
 
 const mappedAccounts=ref([])
-const showCreateUser=ref(false)
+const showSignup=ref(false)
 const showFeedback = ref(false)
 const feedbackMsg=computed(()=>{
     return !downloadDBError.value ? 'Download DB completato': downloadDBError.value
@@ -67,7 +67,7 @@ onMounted(async ()=>{
 })
 
 const onUserCreated=async ()=>{
-    showCreateUser.value=false
+    showSignup.value=false
     await getAccounts()
     mappedAccounts.value=accounts.value.map(a=>({...a,...{"selectedRole":a.role}}))
 }

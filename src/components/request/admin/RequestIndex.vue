@@ -18,9 +18,6 @@
             </div>
     </div>
     
-   
-    
-
     <div class="container-fluid" v-else >
     
        
@@ -79,12 +76,13 @@
 
 <script>
     import useRequest from '@/composables/request.helper'
+    import useUser from '@/composables/user.composable'
     import RequestFilter from '@/components/request/RequestFilter.vue'
-    import RequestEdit from './RequestEdit.vue'
+    import RequestEdit from '@/components/request/admin/RequestEdit.vue'
     import RequestNotes from '@/components/request/RequestNotes.vue'
     import utils from '@/utils'
+    import roles from '@/roles'
     import Popup from '@/components/Popup.vue'
-    import useUser from '@/composables/user.composable'
     
     import { ref, onMounted, shallowRef,computed } from 'vue'
 
@@ -121,7 +119,13 @@
                 if(term)
                 {
                     term=term.toLowerCase()
-                    items=items.filter(i=>JSON.stringify(i.school_json_data).toLowerCase().indexOf(term)>-1 || JSON.stringify(i.user_json_data).toLowerCase().indexOf(term)>-1)
+                    items=items.filter(i=>JSON.stringify(i.school_json_data).toLowerCase().indexOf(term)>-1 
+                                       
+                                        || JSON.stringify(i.user_json_data).toLowerCase().indexOf(term)>-1
+                                       
+                                        || utils.parseZone(i.plesso_mec_code).toLowerCase().indexOf(term)>-1
+                                      )
+                    
                 }
                 
                 if(disc.item!=''){

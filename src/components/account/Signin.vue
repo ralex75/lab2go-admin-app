@@ -2,6 +2,7 @@
   
   
    <div class="col-md-4">
+        <h3 class="text-center">Log In</h3>
         <form @submit.prevent="login()" >
             <div class="mb-3">
                 <label for="email" class="form-label">Indirizzo email</label>

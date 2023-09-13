@@ -1,6 +1,7 @@
 <template>
    
-   <div class="col-md-4">
+   <div class="container" style="width:600px">
+   <div class="col-xl">
         <div class="alert alert-danger text-center" role="alert" v-if="error"> 
             {{error}}
         </div>
@@ -29,46 +30,32 @@
             <div class="mb-3">
                 
                    
-                    <label for="inputPassword" class="form-label">Password </label>
-                    <div class="input-group has-validation">
-                        <input type="password" required="true" max-lenght="20" min-length="8" v-model="form.password" id="inputPassword" :class="{'form-control':true, 'is-invalid' : !validPassword && blur.password, 'is-valid':validPassword}" @blur="blur.password=true" class="form-control">
-                        <div :class="{'invalid-feedback':!validPassword,'hide':validPassword}">
-                        Password non valida.
-                        </div>
-                    </div>
-                    <div id="passwordHelpBlock" class="form-text">
-                    Your password must be 8-20 characters long, contain letters and numbers, and must not contain spaces, special characters, or emoji.
-                    </div>
-                   
-                   
-            </div>
-            <div class="mb-3">
-                
-                   
-                <label for="inputPassword" class="form-label">Conferma Password</label>
+                <label for="inputPassword" class="form-label">Password </label>
                 <div class="input-group has-validation">
-                    <input type="password" required="true" max-lenght="20" min-length="8" v-model="form.confirmPassword" id="inputConfirmPassword" :class="{'form-control':true, 'is-invalid' : !validConfirmPassword && blur.confirm, 'is-valid':validConfirmPassword}" @blur="blur.confirm=validPassword" class="form-control">
-                    <div :class="{'invalid-feedback':!validConfirmPassword,'hide':validConfirmPassword}">
-                        Password di conferma non corrisponde.
+                    <input type="password" required="true" max-lenght="20" min-length="8" v-model="form.password" id="inputPassword" :class="{'form-control':true, 'is-invalid' : !validPassword && blur.password, 'is-valid':validPassword}" @blur="blur.password=true" class="form-control">
+                    <div :class="{'invalid-feedback':!validPassword,'hide':validPassword}">
+                    Password non valida.
                     </div>
                 </div>
-                
             </div>
-            
+                      
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg">Registrati</button>
+                <button type="submit" class="btn btn-primary btn-lg">Registra</button>
             </div>
         </form>
    </div>
+</div>
 </template>
 
 <script setup>
 
 import { reactive,computed } from 'vue';
 import useUser from '@/composables/user.composable'
+import roles from '@/roles'
     
+    const emit=defineEmits(['userCreated'])
     const {signUp,error}=useUser()
-    const form=reactive({"name":"", "surname":"","email":"","password":"","confirmPassword":""})
+    const form=reactive({"name":"", "surname":"","email":"","password":"","role":roles.DISABILITATO})
     
     const blur=reactive({"name":"","surname":"","email":false,"password":false,"confirm":false})
 
@@ -82,13 +69,8 @@ import useUser from '@/composables/user.composable'
         return regex_name.test(form.name)
     })
     const validSurname=computed(()=>{
-        const regex_name=/^\w+$/
+        const regex_name=/^([a-zA-Z]+(\s+)?)+$/
         return regex_name.test(form.surname)
-    })
-
-
-    const validConfirmPassword=computed(()=>{
-        return form.password && form.password===form.confirmPassword
     })
 
     const validPassword=computed(()=>{
@@ -117,7 +99,9 @@ import useUser from '@/composables/user.composable'
             return console.log("Invalid")
         } 
 
-        signUp(form)
+        signUp(form).then(_=>{
+            emit('userCreated')
+        })
     }
 </script>
 

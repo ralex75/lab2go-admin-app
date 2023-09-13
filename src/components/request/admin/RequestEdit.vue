@@ -72,7 +72,7 @@
         
 </div>
 <div class="d-flex align-items-center justify-content-center">
-    <div class="col-md-6" v-if="isAdmin">
+    <div class="col-md-6">
         <div v-if="request.status=='PENDING'" class="row gap-3">
             <input type="button" class="col btn btn-success w-100 btn-lg" @click="doUpdateRequest('SUBMITTED')" value="Sottometti">
             <!--<input type="button" class="col btn btn-warning w-100 btn-lg" @click="doUpdateRequest('PENDING')"  value="Rimetti in PENDING">-->
@@ -117,7 +117,7 @@ const Plesso=computed(()=>{
 })
 
 const canUpdateData=computed(()=>{
-    return isAdmin.value && request.status!="DISCARDED" && request.status!="PENDING"
+    return request.status!="DISCARDED" && request.status!="PENDING"
 })
 
 /*const closePopup=()=>{

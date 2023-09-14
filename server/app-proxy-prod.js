@@ -6,6 +6,8 @@ const app=express()
 const PORT=3000 //DEFAULT LISTENING PORT
 app.use(express.static('dist'))
 
+app.use('/api', createProxyMiddleware({ target: 'http://172.18.0.30:3000', changeOrigin: true }));
+
 app.use(history())
 
 app.get("/",(req,res)=>{
@@ -14,11 +16,6 @@ app.get("/",(req,res)=>{
     res.sendFile(path.join(__dirname,'./dist/index.html'))
 
 })
-
-app.use('/api', createProxyMiddleware({ target: 'http://172.18.0.30:3000', changeOrigin: true }));
-
-
-
 
 app.listen(PORT,()=>{
     console.log("Proxy server UP on port:"+PORT)

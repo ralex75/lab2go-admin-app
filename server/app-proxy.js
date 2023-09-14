@@ -18,8 +18,6 @@ app.get("/",(req,res)=>{
 app.use('/api', createProxyMiddleware({ target: 'http://localhost:3000', changeOrigin: true }));
 
 
-
-
 app.listen(PORT,()=>{
     console.log("Proxy server UP on port:"+PORT)
 }); 

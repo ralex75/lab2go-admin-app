@@ -27,8 +27,8 @@
         </thead>
         <tbody>
             <tr v-for="u in mappedAccounts" :key="u.email">
-                <td>{{ u.email }}</td>
-                <td>{{ u.role }}</td>
+                <td class="align-middle">{{ u.email }}</td>
+                <td class="align-middle">{{ u.role }}</td>
                 <td>
                     <select v-model="u.selectedRole" class="form-select">
                        <option v-for="r in roles" :value="r">{{ r }}</option>

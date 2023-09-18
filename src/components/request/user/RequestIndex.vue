@@ -54,6 +54,7 @@
     import Popup from '@/components/Popup.vue'
     import { ref, onMounted, shallowRef } from 'vue'
     import utils from '@/utils'
+    import useAppSettings from '@/composables/settings.composable'
 
 
     export default {
@@ -62,6 +63,7 @@
             
           
             const {requests,getRequests} = useRequest()
+            const {allowEditRequest,getAll}=useAppSettings()
             const filteredRequests=ref([])
             const selectedComponent=shallowRef(null)
             
@@ -70,12 +72,14 @@
                 getRequests().then(_=>{
                     filteredRequests.value=Object.assign(requests.value)
                 })
+
+                getAll()
                 
             })
 
             //deadline 31-10-2023
             const canUpdate=(status)=>{
-                return status=='SUBMITTED' && new Date() < new Date("10-31-2023") //in formato US
+                return status=='SUBMITTED' && allowEditRequest //in formato US
             }
 
            

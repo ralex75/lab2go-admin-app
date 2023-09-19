@@ -110,7 +110,7 @@
                 return !requests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
             })
 
-            const applyFilter = ({term,disc})=>{
+            const applyFilter = ({term,disc,status})=>{
                 
                 filterChanged.value=true
                 filteredRequests.value=Object.assign(requests.value)
@@ -137,6 +137,10 @@
                     if(disc.pos!=""){
                         items=items.filter(i=>i.user_json_data.discipline[disc.pos]==disc.item)
                     }
+                }
+
+                if(status){
+                    items=items.filter(i=>i.status==status)
                 }
 
                 filteredRequests.value=items

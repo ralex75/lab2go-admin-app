@@ -22,21 +22,34 @@
                 <option value="2">Terza</option>
             </select>
         </div>
+        <div class="form-group">
+            <label>Stato Richiesta</label>
+            <select  class="form-select" v-model="selectedStatus" @change="applyFilter()">
+                <option value="">Tutti</option>
+                <option :value="s" v-for="s in status">{{s}}</option>
+            </select>
+        </div>
     </div>
 </template>
 
 <script setup>
     import discipline from '@/assets/discipline.json'
+    import utils from '@/utils.js'
     import { ref,reactive,computed } from 'vue';
     const emit = defineEmits(['dofilter'])
     const term=ref("")
     const disc=reactive({"item":"","pos":""})
+    const selectedStatus=ref("")
     const isValid=computed(()=>{
         return term.value!="" || disc.item!=""
     })
 
+    const status=computed(()=>{
+        return Object.keys(utils.statusMap)
+    })
+
     const applyFilter=()=>{
-        emit('dofilter',{'term':term.value,disc})
+        emit('dofilter',{'term':term.value,disc,status:selectedStatus.value})
     }
    
 </script>

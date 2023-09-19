@@ -119,11 +119,14 @@
                 if(term)
                 {
                     term=term.toLowerCase()
-                    items=items.filter(i=>JSON.stringify(i.school_json_data).toLowerCase().indexOf(term)>-1 
-                                       
-                                        || JSON.stringify(i.user_json_data).toLowerCase().indexOf(term)>-1
-                                       
-                                        || utils.parseZone(i.plesso_mec_code).toLowerCase().indexOf(term)>-1
+                    items=items.filter(i=>
+                                        {
+                                            let {notes,...data}=i.school_json_data
+                                            data=JSON.stringify(data).toLowerCase()
+                                            return data.indexOf(term)>-1                                       
+                                            || data.toLowerCase().indexOf(term)>-1
+                                            || utils.parseZone(i.plesso_mec_code).toLowerCase().indexOf(term)>-1
+                                        }
                                       )
                     
                 }

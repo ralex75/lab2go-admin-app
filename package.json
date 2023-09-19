@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "prod": "vite build --base=/lab2go/debug/",
+    "prod-debug": "vite build --base=/lab2go/debug/",
+    "prod": "vite build --base=/lab2go/admin/",
     "preview": "vite preview"
   },
   "dependencies": {

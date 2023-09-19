@@ -1,9 +1,13 @@
 <template>
     
-    <Popup v-if="showSignup" @close-popup="showSignup=false">
-        <Signup @userCreated="onUserCreated" />
+    <Popup v-if="showPopup" @close-popup="closePopup">
+        <Signup @onUserCreated="onUserCreated" v-if="popup.signup" />
+        <Settings @onSettingsSaved="onSettingsSaved" v-if="popup.settings" />
     </Popup>
 
+    
+    
+    
        
     <div class="col-md-6">
         <div class="row">
@@ -12,21 +16,34 @@
             </div>
         </div>
         <div class="command-actions">
-            <button class="btn btn-primary" @click="showSignup=true" >Nuovo utente</button>
+            <button class="btn btn-primary" @click="popup.signup=true" >Nuovo utente</button>
             <button class="btn btn-success" @click="doDumpDB()" >DB Download</button>
+            <button class="btn btn-secondary" @click="popup.settings=true" >Impostazioni</button>
         </div>
     <br><br>
     <table class="table">
         <thead>
             <tr>
+                <th><input type="text" class="form-control" placeholder="email" v-model="filter.email" /></th>
+                <th>
+                    <select class="form-select" v-model="filter.role">
+                       <option value="">Tutti</option>
+                       <option v-for="r in roles" :value="r">{{ r }}</option>
+                    </select>
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            <tr>
                 <th>Email</th>
-                <th>Ruolo corrente</th>
+                <th>Ruolo</th>
                 <th>Nuovo Ruolo</th>
                 <th>Azione</th>
             </tr>
+           
         </thead>
         <tbody>
-            <tr v-for="u in mappedAccounts" :key="u.email">
+            <tr v-for="u in filteredAccounts" :key="u.email">
                 <td class="align-middle">{{ u.email }}</td>
                 <td class="align-middle">{{ u.role }}</td>
                 <td>
@@ -44,22 +61,34 @@
 </template>
 <script setup>
 
-import { ref,onMounted,computed} from 'vue';
+import { ref,onMounted,computed,reactive} from 'vue';
 import Popup from '@/components/Popup.vue'
 import useUserAccount from '@/composables/accounts.composable';
 import useUtils from '@/composables/utils.composable';
 import Signup from '@/components/account/Signup.vue'
+import Settings from './Settings.vue';
 import roles from '../roles'
 
 const {getAccounts,accounts,account,updateAccount} =useUserAccount()
 const {dumpDB,error:downloadDBError}=useUtils()
 
+const popup=reactive({"signup":false,"settings":false})
+const filter=reactive({"email":"","role":""})
 const mappedAccounts=ref([])
-const showSignup=ref(false)
 const showFeedback = ref(false)
+
+const showPopup=computed(()=>{
+    return Object.values(popup).some(i=>i)
+})
+
 const feedbackMsg=computed(()=>{
     return !downloadDBError.value ? 'Download DB completato': downloadDBError.value
 })
+
+const closePopup=()=>{
+    Object.keys(popup).forEach(k=>popup[k]=false)
+}
+
 
 onMounted(async ()=>{
     await getAccounts()
@@ -72,6 +101,23 @@ const onUserCreated=async ()=>{
     mappedAccounts.value=accounts.value.map(a=>({...a,...{"selectedRole":a.role}}))
 }
 
+const onSettingsSaved=()=>{
+    popup.settings=false
+}
+
+const filteredAccounts=computed(()=>{
+    let ma=mappedAccounts.value
+    if(filter.role)
+    {
+       ma=ma.filter(a=>a.role==filter.role)
+    }
+    if(filter.email)
+    {
+       ma=ma.filter(a=>a.email.indexOf(filter.email)>-1)
+    }
+
+    return ma
+})
 
 const doSave=(u)=>{
     let {email,selectedRole}=u

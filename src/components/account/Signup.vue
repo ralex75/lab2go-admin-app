@@ -1,6 +1,8 @@
 <template>
    
    <div class="container" style="width:600px">
+    <h4 class="text-center">Registra nuovo utente</h4>
+    <br>
    <div class="col-xl">
         <div class="alert alert-danger text-center" role="alert" v-if="error"> 
             {{error}}
@@ -37,10 +39,11 @@
                     Password non valida.
                     </div>
                 </div>
+                
             </div>
                       
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-lg">Registra</button>
+                <button type="submit" class="btn btn-primary btn-lg">Salva</button>
             </div>
         </form>
    </div>
@@ -53,7 +56,7 @@ import { reactive,computed } from 'vue';
 import useUser from '@/composables/user.composable'
 import roles from '@/roles'
     
-    const emit=defineEmits(['userCreated'])
+    const emit=defineEmits(['onUserCreated'])
     const {signUp,error}=useUser()
     const form=reactive({"name":"", "surname":"","email":"","password":"","role":roles.DISABILITATO})
     
@@ -100,7 +103,7 @@ import roles from '@/roles'
         } 
 
         signUp(form).then(_=>{
-            emit('userCreated')
+            emit('onUserCreated')
         })
     }
 </script>

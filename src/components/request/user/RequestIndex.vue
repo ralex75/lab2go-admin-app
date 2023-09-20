@@ -63,7 +63,7 @@
             
           
             const {requests,getRequests} = useRequest()
-            const {allowEditRequest,getAll}=useAppSettings()
+            const {allowEditRequest,getAllSettings}=useAppSettings()
             const filteredRequests=ref([])
             const selectedComponent=shallowRef(null)
             
@@ -73,7 +73,7 @@
                     filteredRequests.value=Object.assign(requests.value)
                 })
 
-                getAll()
+                getAllSettings()
                 
             })
 
@@ -88,7 +88,7 @@
                 
                 //utente non deve vedere le modifiche dello stato temporaneo alla tabella
                 //solo quando sono COMMITTED può vedere lo stato che è stato deciso per la sua richiesta
-                return !statusIsCommitted(status) ? utils.statusMap["SUBMITTED"] : utils.statusMap[status]
+                return utils.statusMap[status]
             }
 
             const statusIsCommitted=(status)=>{

@@ -1,8 +1,9 @@
 <template>
    
    <div class="container" style="width:600px">
-    <h4 class="text-center">Registra nuovo utente</h4>
+    <h4 class="text-center">{{headerText}}</h4>
     <br>
+   
    <div class="col-xl">
         <div class="alert alert-danger text-center" role="alert" v-if="error"> 
             {{error}}
@@ -34,12 +35,19 @@
                    
                 <label for="inputPassword" class="form-label">Password </label>
                 <div class="input-group has-validation">
-                    <input type="password" required="true" max-lenght="20" min-length="8" v-model="form.password" id="inputPassword" :class="{'form-control':true, 'is-invalid' : !validPassword && blur.password, 'is-valid':validPassword}" @blur="blur.password=true" class="form-control">
+                    <input type="password" :required="!props.selectedUser" max-lenght="20" min-length="8" v-model="form.password" id="inputPassword" :class="{'form-control':true, 'is-invalid' : !validPassword && blur.password, 'is-valid':validPassword}" @blur="blur.password=true" class="form-control">
                     <div :class="{'invalid-feedback':!validPassword,'hide':validPassword}">
                     Password non valida.
                     </div>
                 </div>
                 
+            </div>
+            <div class="mb-3">
+                <label for="role" class="form-label">Ruolo</label>
+                <select class="form-select" name="role" v-model="form.role">
+                       <option value="">Tutti</option>
+                       <option v-for="r in roles" :value="r">{{ r }}</option>
+                    </select>
             </div>
                       
             <div class="d-grid gap-2">
@@ -52,29 +60,39 @@
 
 <script setup>
 
-import { reactive,computed } from 'vue';
+import { reactive,computed,watchEffect } from 'vue';
 import useUser from '@/composables/user.composable'
 import roles from '@/roles'
+const props=defineProps({"selectedUser":{type:Object}})
     
-    const emit=defineEmits(['onUserCreated'])
-    const {signUp,error}=useUser()
-    const form=reactive({"name":"", "surname":"","email":"","password":"","role":roles.DISABILITATO})
+const emit=defineEmits(['onUserCreated'])
+const {signUp,error}=useUser()
+const form=reactive({"name":"", "surname":"","email":"","password":"","role":roles.DISABILITATO})
     
-    const blur=reactive({"name":"","surname":"","email":false,"password":false,"confirm":false})
+const blur=reactive({"name":"","surname":"","email":false,"password":false,"confirm":false})
 
-    const validEmail=computed(()=>{
+const headerText=computed(()=>{
+    return !props.selectedUser ? "Nuovo utente" : "Modifica utente"
+})
+
+watchEffect(()=>{
+    Object.assign(form,props.selectedUser)
+})
+
+const validEmail=computed(()=>{
         const regex_email=/^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/
         return regex_email.test(form.email)
-    })
+})
 
-    const validName=computed(()=>{
+const validName=computed(()=>{
         const regex_name=/^\w+$/
         return regex_name.test(form.name)
-    })
-    const validSurname=computed(()=>{
+})
+
+const validSurname=computed(()=>{
         const regex_name=/^([a-zA-Z]+(\s+)?)+$/
         return regex_name.test(form.surname)
-    })
+})
 
     const validPassword=computed(()=>{
         let password=form.password
@@ -98,11 +116,19 @@ import roles from '@/roles'
 
     const save=()=>{
        
-        if(!validEmail.value || !validPassword.value || !(validName && validSurname)){
+        if(!validEmail.value || !(validName && validSurname)){
             return console.log("Invalid")
         } 
 
-        signUp(form).then(_=>{
+        if(!props.selectedUser &&  !validPassword.value)
+        {
+            return console.log("Invalid")
+        }
+        if(props.selectedUser && form.password && !validPassword.value){
+            return console.log("Invalid")
+        }
+
+        signUp(form,props.selectedUser?.email).then(_=>{
             emit('onUserCreated')
         })
     }

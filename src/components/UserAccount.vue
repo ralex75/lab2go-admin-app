@@ -1,7 +1,7 @@
 <template>
     
     <Popup v-if="showPopup" @close-popup="closePopup">
-        <Signup @onUserCreated="onUserCreated" v-if="popup.signup" />
+        <Signup @onUserCreated="onUserCreated" :selectedUser="selectedUser" v-if="popup.signup" />
         <Settings @onSettingsSaved="onSettingsSaved" v-if="popup.settings" />
     </Popup>
 
@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="command-actions">
-            <button class="btn btn-primary" @click="popup.signup=true" >Nuovo utente</button>
+            <button class="btn btn-primary" @click="popup.signup=true;selectedUser=null" >Nuovo utente</button>
             <button class="btn btn-success" @click="doDumpDB()" >DB Download</button>
             <button class="btn btn-secondary" @click="popup.settings=true" >Impostazioni</button>
         </div>
@@ -37,22 +37,21 @@
             <tr>
                 <th>Email</th>
                 <th>Ruolo</th>
-                <th>Nuovo Ruolo</th>
                 <th>Azione</th>
             </tr>
            
         </thead>
         <tbody>
-            <tr v-for="u in filteredAccounts" :key="u.email">
+            <tr v-for="u in filteredUsers" :key="u.email">
                 <td class="align-middle">{{ u.email }}</td>
                 <td class="align-middle">{{ u.role }}</td>
-                <td>
-                    <select v-model="u.selectedRole" class="form-select">
-                       <option v-for="r in roles" :value="r">{{ r }}</option>
-                    </select>
-                </td>
-                <td>
-                    <button class="btn" @click="doSave(u)" :disabled="u.selectedRole==u.role" :class="{'btn-primary':u.selectedRole!=u.role}" >Salva</button>
+                <td class="inline">
+                    
+                        
+                        <button class="btn btn-primary" @click="doEdit(u)" >Modifica</button>
+                        <button class="btn btn-danger" @click="doDelete(u)" >Elimina</button>
+                        
+                        
                 </td>
             </tr>
         </tbody>
@@ -63,19 +62,20 @@
 
 import { ref,onMounted,computed,reactive} from 'vue';
 import Popup from '@/components/Popup.vue'
-import useUserAccount from '@/composables/accounts.composable';
+import useUser from '@/composables/user.composable';
 import useUtils from '@/composables/utils.composable';
 import Signup from '@/components/account/Signup.vue'
 import Settings from './Settings.vue';
 import roles from '../roles'
 
-const {getAccounts,accounts,account,updateAccount} =useUserAccount()
+const {getUsers,deleteUser,users} =useUser()
 const {dumpDB,error:downloadDBError}=useUtils()
 
 const popup=reactive({"signup":false,"settings":false})
 const filter=reactive({"email":"","role":""})
-const mappedAccounts=ref([])
+const mappedUsers=ref([])
 const showFeedback = ref(false)
+const selectedUser = ref(null)
 
 const showPopup=computed(()=>{
     return Object.values(popup).some(i=>i)
@@ -89,24 +89,34 @@ const closePopup=()=>{
     Object.keys(popup).forEach(k=>popup[k]=false)
 }
 
+const doEdit=(u)=>{
+    selectedUser.value=u
+    popup.signup=true
+}
 
 onMounted(async ()=>{
-    await getAccounts()
-    mappedAccounts.value=accounts.value.map(a=>({...a,...{"selectedRole":a.role}}))
+    await getUsers()
+    mappedUsers.value=users.value.map(a=>({...a,...{"selectedRole":a.role}}))
 })
 
 const onUserCreated=async ()=>{
-    showSignup.value=false
-    await getAccounts()
-    mappedAccounts.value=accounts.value.map(a=>({...a,...{"selectedRole":a.role}}))
+    
+    popup.signup=false
+    refreshUsers()
+  }
+
+const refreshUsers=async ()=>{
+    await getUsers()
+    mappedUsers.value=users.value.map(a=>({...a,...{"selectedRole":a.role}}))
+
 }
 
 const onSettingsSaved=()=>{
     popup.settings=false
 }
 
-const filteredAccounts=computed(()=>{
-    let ma=mappedAccounts.value
+const filteredUsers=computed(()=>{
+    let ma=mappedUsers.value
     if(filter.role)
     {
        ma=ma.filter(a=>a.role==filter.role)
@@ -119,11 +129,11 @@ const filteredAccounts=computed(()=>{
     return ma
 })
 
-const doSave=(u)=>{
-    let {email,selectedRole}=u
-    updateAccount(email,selectedRole).then(_=>{
-        u.role=account.value.role
-    })
+const doDelete=({email})=>{
+    
+    if(!window.confirm("Sicuri di voler eliminare quest'utente?")) return
+
+    deleteUser(email).then(refreshUsers())
    
 }
 
@@ -141,6 +151,12 @@ const doDumpDB=()=>{
     justify-content: flex-start;
     vertical-align: middle;
     gap: 6px;
+}
+
+.inline{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
 }
 
 </style>

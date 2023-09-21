@@ -21,8 +21,8 @@
 		},
 		{
 			"nome": "Emilia-Romagna",
-			"capoluoghi": ["Bologna", "Ferrara", "Forlì-Cesena", "Modena", "Parma", "Piacenza", "Ravenna", "Reggio Emilia", "Rimini"],
-			"province":["BO","FE","FC","MO","PR","PC","RA","RE","RN"]
+			"capoluoghi": ["Bologna", "Ferrara", "Forlì-Cesena","Forlì-Cesena", "Modena", "Parma", "Piacenza", "Ravenna", "Reggio Emilia", "Rimini"],
+			"province":["BO","FE","FC","FO","MO","PR","PC","RA","RE","RN"]
 		},
 		{
 			"nome": "Friuli-Venezia Giulia",

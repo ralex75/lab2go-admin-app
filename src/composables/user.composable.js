@@ -37,10 +37,10 @@ export default function useUser(){
         return user.value!=null
     })
 
-    const signUp=async ({name,surname,email,password,role})=>{
+    const signUp=async (user,email)=>{
         try{
            
-            await axios.post("/user/create",{name,surname,email,password,role})
+            await axios.post("/user/create",{user,email})
             //router.push({name:'home.index'})
         }
         catch(exc){
@@ -78,6 +78,22 @@ export default function useUser(){
        
     }
 
+    const getUsers=async ()=>{
+        try{
+           
+            let {data}=await axios.get("/user/list",{withCredentials:true})
+            users.value=data
+        }
+        catch(exc){
+           
+            error.value=exc.response.data
+        }
+    }
+
+    const deleteUser=async (email)=>{
+        await axios.delete(`/user/${email}`)
+    }
+
    
 
     return {
@@ -89,6 +105,8 @@ export default function useUser(){
        signUp,
        signIn,
        signOut,
+       deleteUser,
+       getUsers,
        isAdmin,
        isCoordinator,
        isDocente,

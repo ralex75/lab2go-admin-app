@@ -17,7 +17,7 @@ export default function useUserAccount(){
     const getAccounts=async ()=>{
         try{
            
-            let {data}=await axios.get("/user/accounts",{withCredentials:true})
+            let {data}=await axios.get("/user/list",{withCredentials:true})
             accounts.value=data
         }
         catch(exc){
@@ -26,23 +26,13 @@ export default function useUserAccount(){
         }
     }
 
-    const updateAccount=async (email,role)=>{
-        try{
-            let {data}=await axios.put(`/user/account`,{email,role})
-            account.value=data
-        }
-        catch(exc){
-           
-            error.value=exc.response.data
-        }
-    }
+    
 
     
     return {
       accounts,
       account,
-      getAccounts,
-      updateAccount
+      getAccounts
       
     }
 }

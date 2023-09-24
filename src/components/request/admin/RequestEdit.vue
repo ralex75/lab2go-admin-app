@@ -80,7 +80,10 @@
         </div>
         <div v-else-if="request.status!='DISCARDED'" class="d-grid gap-2 ">
             <input type="button" @click="restoreRequest()" :disabled="request.status=='SUBMITTED'" class="mb-6 btn w-100 btn-lg" :class="{'btn-warning':request.status!='SUBMITTED'}"  value="Ripristina" />
-            <input type="button" @click="acceptRequest()" :disabled="acceptButtonIsDisabled" class="mb-6 btn w-100 btn-lg" :class="{'btn-primary':disci_accepted.length}" value="Accetta" />
+           
+            <input type="button" @click="acceptRequest('INFN')" :disabled="acceptButtonIsDisabled" class="mb-6 btn w-100 btn-lg" :class="{'btn-primary':disci_accepted.length}" value="Accetta come INFN" />
+            <input type="button" @click="acceptRequest('USAP')" :disabled="acceptButtonIsDisabled" class="mb-6 btn w-100 btn-lg" :class="{'btn-info':disci_accepted.length}" value="Accetta come Sapienza" />
+            
             <input type="button" @click="rejectRequest()" class="btn w-100  btn-lg btn-danger" value="Rifiuta"  />
         </div>
     </div>
@@ -89,8 +92,9 @@
 
 <script setup>
 import { computed, reactive,ref } from 'vue';
-import useRequest  from '@/composables/request.helper'
+import useRequest  from '@/composables/request.composable'
 import useUser from '@/composables/user.composable';
+import utils from '@/utils.js'
 
 const props=defineProps(['args'])
 const {saveRequest}=useRequest()
@@ -120,13 +124,10 @@ const canUpdateData=computed(()=>{
     return request.status!="DISCARDED" && request.status!="PENDING"
 })
 
-/*const closePopup=()=>{
-    emit('closePopup')
-}*/
 
 const doUpdateRequest=async(status="UNDEFINED")=>{
     try {
-        
+        if(!utils.statusMap[status]) return
         let {id,user_json_data,disci_accepted}=requestCpy
         let ureq=await saveRequest(id,user_json_data,disci_accepted,status)
         emit('updatedRequest',ureq)
@@ -144,7 +145,7 @@ const restoreRequest=()=>{
 }
 
 //accetta la richiesta 
-const acceptRequest=async()=>{
+const acceptRequest=async(acceptAs)=>{
     
    
     let discipline=Object.values(usr_data.discipline)
@@ -157,7 +158,7 @@ const acceptRequest=async()=>{
     
     if(requestCpy.disci_accepted.length==0) return
 
-    doUpdateRequest('ACCEPTED')
+    doUpdateRequest(`ACCEPTED_${acceptAs}`)
 }
 
 const rejectRequest=()=>{

@@ -109,7 +109,7 @@ watchEffect(() =>
     const doUpdateSchool=()=>{
         
         if(!formIsValid()) return
-        console.log("SAVE")
+       
         saveSchool(schoolId.value,form).then(_=>{
             emit('schoolUpdated')
         })

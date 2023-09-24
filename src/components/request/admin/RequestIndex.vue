@@ -75,7 +75,7 @@
 </template>
 
 <script>
-    import useRequest from '@/composables/request.helper'
+    import useRequest from '@/composables/request.composable'
     import useUser from '@/composables/user.composable'
     import RequestFilter from '@/components/request/RequestFilter.vue'
     import RequestEdit from '@/components/request/admin/RequestEdit.vue'

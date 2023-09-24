@@ -49,7 +49,7 @@
 </template>
 
 <script>
-    import useRequest from '@/composables/request.helper'
+    import useRequest from '@/composables/request.composable'
     import RequestEdit from './RequestEdit.vue'
     import Popup from '@/components/Popup.vue'
     import { ref, onMounted, shallowRef } from 'vue'

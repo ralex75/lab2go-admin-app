@@ -2,7 +2,7 @@ import axios from "../services"
 import {ref} from 'vue'
 import { useRouter } from "vue-router"
 
-export default function requestHelper(){
+export default function useRequest(){
     
     const requests=ref([])
     const request=ref({})
@@ -49,7 +49,7 @@ export default function requestHelper(){
         error.value=""
         try{
            
-            if(status!='ACCEPTED'){ disci_accepted=[]}
+            if(status.indexOf('ACCEPTED')<0){ disci_accepted=[]}
             
             let {data}=await axios.put(`/requests/${rid}/update`,{usr_data, disci_accepted, status}) 
           

@@ -80,7 +80,7 @@
 
 <script setup>
 import { computed, reactive,ref } from 'vue';
-import useRequest  from '@/composables/request.helper'
+import useRequest  from '@/composables/request.composable'
 import useUser from '@/composables/user.composable';
 import DisciplineSelection from './DisciplineSelection.vue';
 

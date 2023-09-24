@@ -7,7 +7,7 @@ export default function useSchool(){
     const schools=ref([])
     const school=ref({})
     const router=useRouter()
-    const errors=ref([])
+    const errors=ref({})
     const working=ref(false)
     const schoolYears=ref([])
 
@@ -26,6 +26,7 @@ export default function useSchool(){
                                         data:JSON.parse(s.school_json_data),
                                         discipline:JSON.parse(s.discipline),
                                         students:s.students
+                                        
                                     }))
     }  
     
@@ -97,6 +98,7 @@ export default function useSchool(){
             
         }
         catch(exc){
+           
             handlingError(exc)
         }
     }   

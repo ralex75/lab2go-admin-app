@@ -55,7 +55,7 @@
     max-height: 100px;
   }
 
-  input[type=text]:read-only,textarea:read-only{
+  input[type=text]:read-only,input[type=email]:read-only,textarea:read-only{
     background-color: #DDD;
     color: #000;
     pointer-events: none;

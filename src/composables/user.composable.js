@@ -30,6 +30,7 @@ export default function useUser(){
     })
 
     const isDocente=computed(()=>{
+       
         return user.value && user.value.role==roles.DOCENTE
     })
 

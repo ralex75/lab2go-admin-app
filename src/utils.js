@@ -1,12 +1,12 @@
 import regioni from '@/assets/regioni.json' 
 
 const statusMap={
-    "PENDING":"IN ATTESA DI APPROVAZIONE",
-    "SUBMITTED":"SOTTOMESSA",
-    "ACCEPTED":"SOTTOMESSA",
-    "REJECTED":"SOTTOMESSA",
-    "ACCEPTED_COMMIT":"ACCETTATA",
-    "REJECTED_COMMIT":"RIFIUTATA"
+    "PENDING":"IN ATTESA DI APPROVAZIONE", //stato di richiesta che deve essere valutata
+    "SUBMITTED":"SOTTOMESSA", // stato di richiesta valutata positivamente
+    "ACCEPTED":"SOTTOMESSA", // finchè non si finalizza il docente vedrà sempre sottomessa per stato accepted
+    "REJECTED":"SOTTOMESSA", // finchè non si finalizza il docente vedrà sempre sottomessa per stato rejected
+    "ACCEPTED_COMMIT":"ACCETTATA", // stato finalizzato
+    "REJECTED_COMMIT":"RIFIUTATA"  // stato finalizzato
 }
 
 const parseZone=(meccode)=>{

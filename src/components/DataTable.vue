@@ -4,7 +4,7 @@
     <thead>
         <tr>
            <th :colspan="colSpanCount" v-if="props.header">
-                {{ props.header }} ({{ props.data.length }})
+                {{ props.header }} ({{ props.data?.length }})
            </th>
         </tr>
         <tr>
@@ -12,7 +12,7 @@
                 {{ k }}
            </th>
            <th v-if="hasAction">
-                &nbsp;
+                <input type="button" class="btn btn-success w-100" value="Aggiungi" @click="props.addCallback">
             </th>
         </tr>
     </thead>
@@ -21,8 +21,10 @@
             <td v-for="k in props.dataKeys">
                 {{ r[k] }}
             </td>
-            <td v-if="hasAction">
-                <input type="button" v-if="props.deleteCallback" @click="props.deleteCallback(r)" value="Elimina" class="btn btn-danger">
+            <td v-if="hasAction" class="action">
+               
+                <input type="button" v-if="props.editCallback" @click="props.editCallback(r)" value="Modifica" class="btn btn-primary w-100">
+                <input type="button" v-if="props.deleteCallback" @click="props.deleteCallback(r)" value="Elimina" class="btn btn-danger w-100">
             </td>
         </tr>
     </tbody>
@@ -38,6 +40,8 @@ const emits=defineEmits(["delete"])
 const props=defineProps({
     "header":String,
     "colHeaderKeys":{type:Array,required:true},
+    "addCallback":{type:Function},
+    "editCallback":{type:Function},
     "deleteCallback":{type:Function},
     "data":{type:Array,required:true},
     "dataKeys":{type:Array,required:true}
@@ -49,8 +53,15 @@ const colSpanCount=computed(()=>{
 })
 
 const hasAction=computed(()=>{
-    return props.deleteCallback
+    return props.deleteCallback || props.editCallback
     
 })
 
 </script>
+
+<style scoped>
+.action{
+    display: flex;
+    gap:10px
+}
+</style>

@@ -74,19 +74,7 @@
         selectedSchoolId.value=id
     }
 
-    /*const doDeleteSchool = async (id) => {
-        if (!window.confirm("Sei sicuro?")) return;
-        await deleteSchool(id);
-        await getSchools();
-    };
-
-    
-
-    const doSearch=(value)=>{
-        getSchools({"keyword":value})
-    }*/
-
-
+  
 </script>
 
 <style scoped>

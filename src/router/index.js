@@ -120,6 +120,20 @@ const routes = [
         roles:[roles.DOCENTE,roles.ADMIN,roles.COORDINATORE]
     }
   },
+  {
+    path: '/tutors',
+    name: 'tutor.index',
+    component: ()=>import('@/components/tutors/TutorIndex.vue'),
+    meta: {
+        page:{
+          name:"Tutors",
+          title: "Tutors",
+          subtitle:"",
+          description:"Lista dei Tutor"
+        },
+        roles:[roles.DOCENTE,roles.ADMIN,roles.COORDINATORE]
+    }
+  },
   /*{
     path: '/requests/add',
     name: 'requests.add',

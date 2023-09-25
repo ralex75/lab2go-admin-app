@@ -16,12 +16,12 @@ const parseZone=(meccode)=>{
     if(!meccode) return ""
 
     try{
-    let prov=meccode.substring(0,2)
-    let reg=regioni.filter(r=>r.province.indexOf(prov)>-1)[0]
-    let city=reg.capoluoghi[reg.province.indexOf(prov)]
-    let fn=`${city} - ${reg.nome}`
-    console.log(fn)
-    return fn
+        let prov=meccode.substring(0,2)
+        let reg=regioni.filter(r=>r.province.indexOf(prov)>-1)[0]
+        let city=reg.capoluoghi[reg.province.indexOf(prov)]
+        let fn=`${city} - ${reg.nome}`
+        
+        return fn
     }
     catch(exc)
     {

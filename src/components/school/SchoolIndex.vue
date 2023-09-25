@@ -28,9 +28,8 @@
                         <td>{{ s.data.sc_tab_plesso }}</td>
                         <td>{{ s.data.sc_tab_indirizzo }}</td>
                         <td>{{ utils.parseZone(s.data.sc_tab_plesso_code) }}</td>
-                        <td><span v-html="utils.formatDiscipline(s.discipline)"></span></td>
+                        <td><span v-html="utils.formatDiscipline(Object.keys(s.discipline))"></span></td>
                         <td>
-                          
                             <div class="action">
                                 <button type="button" :disabled="!s.students.length" class="btn btn-outline-success" v-if="isAdmin" @click.prevent="showDumpStudents(s.id)">Dump</button>
                                 <button type="button" class="btn btn-primary btn-ms" @click.prevent="showEditSchool(s.id)">Modifica</button>

@@ -60,7 +60,7 @@
                 <td>{{ r.school_json_data.sc_tab_plesso }}<br><span class="fs-6">{{ r.plesso_mec_code.toUpperCase() }}</span></td>
                 <td>{{ utils.parseZone(r.plesso_mec_code) }}</td>
                 <td><span v-html="formatDiscipline(r.user_json_data.discipline)"></span></td>
-                <td><span v-html="formatDiscipline(r.disci_accepted)"></span></td>
+                <td><span v-html="formatDiscipline(r.disci_accepted ? Object.keys(r.disci_accepted) : null)"></span></td>
                 <td>{{ r.status }}</td>
                 <td class="action">
                     
@@ -146,10 +146,14 @@
                 filteredRequests.value=items
             }
 
+           
+
             const formatDiscipline=(discipline)=>{
+                if(!discipline) return ""
                 return discipline?.length > 0  ? "<ul class='discipline'>"+discipline.map(d=>`<li>${d}</li>`).join("")+"</ul>" : 'Nessuna'
             }
 
+            
            
             const showPopup=(args,type)=>{
                 let cmp={"NOTES":RequestNotes,"REQUEST":RequestEdit}
@@ -187,6 +191,7 @@
                 selectedComponent,
                 utils,
                 formatDiscipline,
+                
                 applyFilter,
                 showFilter,
                 updatedRequest,

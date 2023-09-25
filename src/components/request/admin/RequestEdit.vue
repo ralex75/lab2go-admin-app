@@ -56,12 +56,16 @@
             </div>
             <div>
                 <label>Discipline (in ordine di preferenza)</label>
-              
+               
                 <section class="discipline" v-for="(d,index) in discipline" :key="index">
                     
                     <input type="checkbox" :disabled="!canUpdateData" v-model="disci_accepted" :value="d" />
                     
-                    <label for="checkbox">{{ d }}</label>
+                    <label for="checkbox">{{ d }} {{ index }}</label>
+                   
+                    <select class="form-select" v-if="request.status!='PENDING'" v-model="selectedTutors[d]" :disabled="disci_accepted.indexOf(d)<0">
+                        <option v-for="t in tutors" :value="t.id">{{t.name}}</option>
+                    </select> 
                     
                 </section>
             </div>
@@ -91,24 +95,36 @@
 </template>
 
 <script setup>
-import { computed, reactive,ref } from 'vue';
+import { computed, reactive, ref, onMounted, watchEffect } from 'vue';
 import useRequest  from '@/composables/request.composable'
 import useUser from '@/composables/user.composable';
+import useTutor from "@/composables/tutor.composable"
 import utils from '@/utils.js'
 
 const props=defineProps(['args'])
 const {saveRequest}=useRequest()
 const {isAdmin}=useUser()
+const {tutors,getTutors}=useTutor()
 
 const request=props.args
+
+onMounted(getTutors)
 
 //deep copy
 const requestCpy=reactive(JSON.parse(JSON.stringify(request)))
 const sch_data=requestCpy.school_json_data
 const usr_data=requestCpy.user_json_data
 const discipline=usr_data.discipline
-const disci_accepted=ref(requestCpy.disci_accepted || [])
+const disci_accepted=ref( requestCpy.disci_accepted ? Object.keys(requestCpy.disci_accepted) : [])
+
+const selectedTutors=reactive({}) //mappa disc => tutor
+
+//map tutor con discipline
+discipline.map(d=>{selectedTutors[d]="1"})
+Object.assign(selectedTutors,requestCpy.disci_accepted)
+
 const emit=defineEmits(['closePopup','updatedRequest'])
+
 
 const acceptButtonIsDisabled=computed(()=>{
     return !disci_accepted.value.length
@@ -128,8 +144,14 @@ const canUpdateData=computed(()=>{
 const doUpdateRequest=async(status="UNDEFINED")=>{
     try {
         if(!utils.statusMap[status]) return
-        let {id,user_json_data,disci_accepted}=requestCpy
-        let ureq=await saveRequest(id,user_json_data,disci_accepted,status)
+        let {id,user_json_data}=requestCpy
+        let tutorDisciAssign={}
+
+        for (let k of disci_accepted.value){
+            tutorDisciAssign[k]=selectedTutors[k]
+        }
+        
+        let ureq=await saveRequest(id,user_json_data,tutorDisciAssign,status)
         emit('updatedRequest',ureq)
     }
     catch(exc){

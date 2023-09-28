@@ -61,7 +61,7 @@
                     
                     <input type="checkbox" :disabled="!canUpdateData" v-model="disci_accepted" :value="d" />
                     
-                    <label for="checkbox">{{ d }} {{ index }}</label>
+                    <label for="checkbox">{{ d }}</label>
                    
                     <select class="form-select" v-if="request.status!='PENDING'" v-model="selectedTutors[d]" :disabled="disci_accepted.indexOf(d)<0">
                         <option v-for="t in tutors" :value="t.id">{{t.name}}</option>
@@ -108,7 +108,11 @@ const {tutors,getTutors}=useTutor()
 
 const request=props.args
 
-onMounted(getTutors)
+onMounted(()=>{
+    getTutors().then(_=>{
+        discipline.map(d=>{selectedTutors[d]=tutors.value[0].id})
+    })
+})
 
 //deep copy
 const requestCpy=reactive(JSON.parse(JSON.stringify(request)))
@@ -120,11 +124,10 @@ const disci_accepted=ref( requestCpy.disci_accepted ? Object.keys(requestCpy.dis
 const selectedTutors=reactive({}) //mappa disc => tutor
 
 //map tutor con discipline
-discipline.map(d=>{selectedTutors[d]="1"})
+
 Object.assign(selectedTutors,requestCpy.disci_accepted)
 
 const emit=defineEmits(['closePopup','updatedRequest'])
-
 
 const acceptButtonIsDisabled=computed(()=>{
     return !disci_accepted.value.length

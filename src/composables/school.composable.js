@@ -22,11 +22,13 @@ export default function useSchool(){
                                  .map(s=>({ 
                                         
                                         id:s.id,
+                                        code:s.plesso_mec_code,
                                         year:s.year,
+                                        userEmail:s.userEmail,
                                         data:JSON.parse(s.school_json_data),
                                         discipline:JSON.parse(s.discipline),
-                                        students:s.students
-                                        
+                                        students:s.students,
+                                        status:s.status
                                     }))
     }  
     
@@ -74,7 +76,18 @@ export default function useSchool(){
       
         let {data}=await axios.get(`/schools/${id}`) 
         school.value=data.school
-    }  
+    } 
+    
+    const confirmSchool=async(school)=>{
+        errors.value=''
+        try{
+            let year=new Date().getFullYear()
+            await axios.get(`/schools/confirm?code=${school.code}&year=${year}&email=${school.userEmail}`) 
+        }
+        catch(exc){
+            handlingError(exc)
+        }
+    }
 
     const storeSchool=async (data)=>
     { 
@@ -125,6 +138,7 @@ export default function useSchool(){
         getSchoolPartecipationYears,
         storeSchool,
         saveSchool,
-        deleteSchool
+        deleteSchool,
+        confirmSchool
     }
 }

@@ -30,11 +30,26 @@
                         <td>{{ utils.parseZone(s.data.sc_tab_plesso_code) }}</td>
                         <td><span v-html="utils.formatDiscipline(Object.keys(s.discipline))"></span></td>
                         <td>
-                            <div class="action">
+                           
+                            <div class="action" v-if="!isDocente">
+                            
                                 <button type="button" :disabled="!s.students.length" class="btn btn-outline-success" v-if="isAdmin" @click.prevent="showDumpStudents(s.id)">Dump</button>
                                 <button type="button" class="btn btn-primary btn-ms" @click.prevent="showEditSchool(s.id)">Modifica</button>
                                 <router-link class="btn btn-outline-primary" :to="{ name: 'student.index', params: { 'schoolId': s.id }}">Studenti</router-link>
+                            
                             </div>
+                            <div class="action" v-else>
+                                
+                                <section v-if="s.status!='CONFIRMED'">
+                                    <a href="#link" class="btn btn-outline-primary" @click.prevent="doConfirmSchool(s)" role="button">Conferma Partecipazione</a>
+                                </section>
+                                <section v-else>
+                                    <button type="button" class="btn btn-primary btn-ms" @click.prevent="showEditSchool(s.id)">Modifica</button>
+                                    <router-link class="btn btn-outline-primary" :to="{ name: 'student.index', params: { 'schoolId': s.id }}">Studenti</router-link>
+                                </section> 
+
+                            </div>
+
                         </td>
                     </tr>
                 </tbody>
@@ -56,8 +71,8 @@
     import DumpStudents from '../DumpStudents.vue';
     import useUser from '@/composables/user.composable';
     
-    const { schools, getSchools} = useSchool();
-    const {user,isAdmin,isCoordinator}=useUser()
+    const { schools, getSchools,confirmSchool} = useSchool();
+    const {user,isAdmin,isCoordinator,isDocente}=useUser()
     
     const selectedSchoolId=ref(null)
     const show=ref("")
@@ -66,6 +81,12 @@
     const showEditSchool=(id)=>{
         show.value='school'
         selectedSchoolId.value=id
+    }
+
+    const doConfirmSchool=(s)=>{
+        confirmSchool(s).then(res=>{
+            getSchools()
+        })
     }
 
     const showDumpStudents=(id=0)=>{
@@ -83,7 +104,7 @@
         padding: 0;
         padding-left: 20px;
   }
-  .action{
+  .action, div.action section{
     display: flex;
     gap: 10px;
     flex-wrap: wrap;

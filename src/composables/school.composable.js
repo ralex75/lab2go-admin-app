@@ -73,7 +73,6 @@ export default function useSchool(){
     
     const getSchool=async (id)=>
     { 
-      
         let {data}=await axios.get(`/schools/${id}`) 
         school.value=data.school
     } 

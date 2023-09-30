@@ -1,6 +1,6 @@
 <template>
         <div>
-            <Popup v-if="selectedSchoolId!=null" @close-popup="selectedSchoolId=null">
+            <Popup v-if="selectedSchoolId!=null" @close-popup="selectedSchoolId=null" >
                 <SchoolEdit v-if="show=='school'" :schoolId="selectedSchoolId" @school-updated="selectedSchoolId=null" /> 
                 <DumpStudents v-if="show=='dump'" :schoolId="selectedSchoolId" />
             </Popup>

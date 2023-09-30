@@ -108,11 +108,6 @@ const {tutors,getTutors}=useTutor()
 
 const request=props.args
 
-onMounted(()=>{
-    getTutors().then(_=>{
-        discipline.map(d=>{selectedTutors[d]=tutors.value[0].id})
-    })
-})
 
 //deep copy
 const requestCpy=reactive(JSON.parse(JSON.stringify(request)))
@@ -123,8 +118,27 @@ const disci_accepted=ref( requestCpy.disci_accepted ? Object.keys(requestCpy.dis
 
 const selectedTutors=reactive({}) //mappa disc => tutor
 
-//map tutor con discipline
 
+
+onMounted(()=>{
+    getTutors().then(_=>{
+        console.log("disci acc2:",requestCpy.disci_accepted)
+        for(let d of discipline)
+        {
+            let tutorId=tutors.value[0].id // default
+           
+            if(requestCpy.disci_accepted && requestCpy.disci_accepted[d])
+            {
+                tutorId=requestCpy.disci_accepted[d]
+                
+            }
+            console.log("tutorID:",tutorId)
+            selectedTutors[d]=tutorId
+        }
+        
+    })
+})
+//map tutor con discipline
 Object.assign(selectedTutors,requestCpy.disci_accepted)
 
 const emit=defineEmits(['closePopup','updatedRequest'])
@@ -153,6 +167,8 @@ const doUpdateRequest=async(status="UNDEFINED")=>{
         for (let k of disci_accepted.value){
             tutorDisciAssign[k]=selectedTutors[k]
         }
+
+        
         
         let ureq=await saveRequest(id,user_json_data,tutorDisciAssign,status)
         emit('updatedRequest',ureq)
@@ -184,6 +200,7 @@ const acceptRequest=async(acceptAs)=>{
     if(requestCpy.disci_accepted.length==0) return
 
     doUpdateRequest(`ACCEPTED_${acceptAs}`)
+
 }
 
 const rejectRequest=()=>{

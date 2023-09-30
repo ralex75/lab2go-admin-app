@@ -7,7 +7,7 @@ const BASE_URL={"DEV":'/api',"PROD":'/lab2go/admin/api',"DEBUG":'/lab2go/debug/a
 
 // FOR PRODUCTION
 const instance=axios.create({
-  baseURL:BASE_URL.DEV,
+  baseURL:BASE_URL.DEBUG,
   timeout: 1000,
   withCredentials:true
 });

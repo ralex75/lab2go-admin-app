@@ -16,15 +16,21 @@
     
     <div class="d-flex justify-content-center gap-5" style="margin:20px 0">
       <img v-for="img in images" :src="img"   class="rounded logo" alt="...">
+      
     </div>
-   
+    <div class="d-flex justify-content-center">
+      <a :href="policyURL.DEV" target="_blank">Privacy Policy</a>
+    </div>
+    
     <div class="container-fluid">
+      
           <div class="row justify-content-md-center" >
               <div class="col-md-12" >
                   <PageInfo></PageInfo>
               </div>
           </div>
           <div class="row justify-content-md-center">
+            
                   <router-view />
           </div>
     </div>
@@ -40,7 +46,8 @@
     import UserMenu from './components/UserMenu.vue';
     import useImageHeader from '@/composables/images.composable'
     
-    
+    const policyURL={"PROD":"/lab2go/admin/api/policy","DEV":"http://localhost:3000/api/policy"}
+
     const {images,loadImages}=useImageHeader(Array.from({length:6},(_,i)=>{ return `image${i+1}.png`}))
 
     onMounted(loadImages)

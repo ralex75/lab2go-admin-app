@@ -39,7 +39,7 @@
                     </div>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="doCommitRequests()" :disabled="canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-secondary':!canCommit}"  value="Finalizza" />
+                    <input type="button" @click="doCommitRequests()" :disabled="!canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-secondary':!canCommit}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>
@@ -81,7 +81,6 @@
     import RequestEdit from '@/components/request/admin/RequestEdit.vue'
     import RequestNotes from '@/components/request/RequestNotes.vue'
     import utils from '@/utils'
-    import roles from '@/roles'
     import Popup from '@/components/Popup.vue'
     
     import { ref, onMounted, shallowRef,computed } from 'vue'

@@ -38,7 +38,7 @@
                     </div>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="doCommitRequests()" :disabled="canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-secondary':!canCommit}"  value="Finalizza" />
+                    <input type="button" @click="doCommitRequests()" :disabled="!canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-secondary':!canCommit}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>

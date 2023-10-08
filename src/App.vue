@@ -19,7 +19,7 @@
       
     </div>
     <div class="d-flex justify-content-center">
-      <a :href="policyURL.DEV" target="_blank">Privacy Policy</a>
+      <a :href="policyURL.PROD" target="_blank">Privacy Policy</a>
     </div>
     
     <div class="container-fluid">

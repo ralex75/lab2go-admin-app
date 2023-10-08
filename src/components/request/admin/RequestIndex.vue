@@ -11,10 +11,13 @@
     </div>
 
 
-
+    
     <div class="row d-flex justify-content-center" v-if="requests.length==0">
-            <div class="col-md-6 alert alert-info text-center" role="alert" > 
+            <div class="col-md-6 alert alert-info text-center" role="alert" v-if="!working"> 
                 Non ci sono richieste di partecipazione al momento.
+            </div>
+            <div class="col-md-6 alert alert-info text-center" role="alert" v-else > 
+                Caricamento dati...
             </div>
     </div>
     
@@ -24,12 +27,8 @@
     <div class="col-md-4" v-if="isAdmin">
         <RequestFilter v-if="requests.length>0" @dofilter="applyFilter($event)" />
     </div>
-       
-    <!--<div class="col-md-6 alert alert-info text-center" role="alert" v-if="filterChanged && filteredRequests?.length==0"> 
-        Non ci sono richieste con il filtro selezionato
-    </div>-->
 
-    <table class="table my-margin">
+    <table class="table my-margin" v-if="!working">
         <thead>
             <tr>
                 <th colspan="6" style="text-align: left;">
@@ -39,7 +38,7 @@
                     </div>
                 </th>
                 <th colspan="2" style="text-align: left;">
-                    <input type="button" @click="doCommitRequests()" :disabled="!canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-secondary':!canCommit}"  value="Finalizza" />
+                    <input type="button" @click="doCommitRequests()" :disabled="canCommit" class="mb-6 btn w-100 btn-lg" :class="{'btn-success':canCommit,'btn-secondary':!canCommit}"  value="Finalizza" />
                 </th>
             </tr>
             <tr>
@@ -90,7 +89,7 @@
         setup(){
             
             const {isAdmin}=useUser()
-            const {requests,getRequests,commitRequests,error} = useRequest()
+            const {requests,getRequests,commitRequests,error,working} = useRequest()
             const filteredRequests=ref([])
             const filterChanged=ref(false)
             const selectedComponent=shallowRef(null)
@@ -149,7 +148,7 @@
 
             const formatDiscipline=(discipline)=>{
                 if(!discipline) return ""
-                return discipline?.length > 0  ? "<ul class='discipline'>"+discipline.map(d=>`<li>${d}</li>`).join("")+"</ul>" : 'Nessuna'
+                return discipline?.length > 0  ? "<ul class='discipline'>"+discipline.map(d=>`<li>${d}</li>`).join("")+"</ul>" : ''
             }
 
             
@@ -190,7 +189,7 @@
                 selectedComponent,
                 utils,
                 formatDiscipline,
-                
+                working,
                 applyFilter,
                 showFilter,
                 updatedRequest,

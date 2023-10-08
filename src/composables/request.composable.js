@@ -7,13 +7,21 @@ export default function useRequest(){
     const requests=ref([])
     const request=ref({})
     const error=ref("")
+    const working=ref(true)
     const router=useRouter()
    
     const getRequests=async (filter)=>
-    {   
-        let {data}=await axios.post(`/requests/list`,{filter}) 
-        requests.value=data.requests.map(r=>map(r))
-        
+    {   working.value=true
+        try{
+            let {data}=await axios.post(`/requests/list`,{filter}) 
+            requests.value=data.requests.map(r=>map(r))
+        }
+        catch(exc){
+            console.log(exc)
+        }
+        finally{
+            working.value=false
+        }
     }  
 
     const createRequest=async(formdata)=>{
@@ -79,6 +87,7 @@ export default function useRequest(){
     return {
         request,
         requests,
+        working,
         error,
         getRequests,
         getRequest,

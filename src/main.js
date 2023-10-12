@@ -14,10 +14,10 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
 
 /* import specific icons */
-import { faEye,faInfoCircle,faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faEye,faInfoCircle,faPlus,faTrash } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
-library.add(faEye,faInfoCircle,faPlus)
+library.add(faEye,faInfoCircle,faPlus,faTrash)
 
 const app = createApp(App)
 

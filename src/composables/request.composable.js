@@ -67,6 +67,18 @@ export default function useRequest(){
             error.value=exc
         }
     }
+    const deleteRequest=async (rid)=>{
+        error.value=""
+        try{
+           
+            
+            await axios.delete(`/requests/${rid}`) 
+          
+        }
+        catch(exc){
+            error.value=exc
+        }
+    }
 
     const commitRequests=async()=>{
         
@@ -92,6 +104,7 @@ export default function useRequest(){
         getRequests,
         getRequest,
         saveRequest,
+        deleteRequest,
         commitRequests,
     }
 }

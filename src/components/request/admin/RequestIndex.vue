@@ -65,7 +65,7 @@
                     
                     <span style="color:green"><font-awesome-icon icon="fa-solid fa-eye" title="visualizza richiesta" @click="showPopup(r,'REQUEST')" /></span>
                     <span v-if="r.user_json_data.notes" style="color:dodgerblue"><font-awesome-icon icon="fa-solid fa-info-circle" title="mostra note" @click="showPopup(r.user_json_data.notes,'NOTES')"  /></span>
-                   
+                    <span style="color:red"><font-awesome-icon icon="fa fa-trash" title="elimina richiesta" @click="doDeleteRequest(r)" /></span>
                 </td>
             </tr>
         </tbody>
@@ -90,7 +90,7 @@
         setup(){
             
             const {isAdmin}=useUser()
-            const {requests,getRequests,commitRequests,error,working} = useRequest()
+            const {requests,getRequests,commitRequests,deleteRequest,error,working} = useRequest()
             const filteredRequests=ref([])
             const filterChanged=ref(false)
             const selectedComponent=shallowRef(null)
@@ -108,10 +108,10 @@
             //per abilitare tutte le richieste devono essere accettate o rifiutate
             const canCommit=computed(()=>{
                 if(!allowSingleFinalize.value){
-                    console.log("QUI")
                     return !requests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
                 }
-                return requests.value.some(r=>r.status.indexOf("ACCEPTED")>-1)
+                return filteredRequests.value.some(r=>r.status.indexOf("ACCEPTED")>-1)
+                
             })
 
             const applyFilter = ({term,disc,status})=>{
@@ -183,6 +183,18 @@
          
             }
 
+            const doDeleteRequest=async (r)=>{
+                try{
+                    await deleteRequest(r.id)
+                }
+                catch(exc)
+                {
+                    console.log(exc)
+                    return
+                }
+                r.status='REJECTED'
+            }
+
             onMounted(()=>{ 
                             getAllSettings()
                             getAllRequests()
@@ -206,6 +218,7 @@
                 canCommit,
                 doCommitRequests,
                 error,
+                doDeleteRequest
                 
             }
         },

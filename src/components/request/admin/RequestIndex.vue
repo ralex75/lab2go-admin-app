@@ -79,6 +79,7 @@
     import RequestFilter from '@/components/request/RequestFilter.vue'
     import RequestEdit from '@/components/request/admin/RequestEdit.vue'
     import RequestNotes from '@/components/request/RequestNotes.vue'
+    import useSettings from '@/composables/settings.composable'
     import utils from '@/utils'
     import Popup from '@/components/Popup.vue'
     
@@ -94,6 +95,7 @@
             const filterChanged=ref(false)
             const selectedComponent=shallowRef(null)
             const showFilter=ref(false)
+            const {getAllSettings,allowSingleFinalize}=useSettings()
                       
 
             const getAllRequests=()=>{
@@ -105,7 +107,11 @@
             //abilita o disabilita pulsante di commit
             //per abilitare tutte le richieste devono essere accettate o rifiutate
             const canCommit=computed(()=>{
-                return !requests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
+                if(!allowSingleFinalize.value){
+                    console.log("QUI")
+                    return !requests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
+                }
+                return requests.value.some(r=>r.status.indexOf("ACCEPTED")>-1)
             })
 
             const applyFilter = ({term,disc,status})=>{
@@ -177,7 +183,11 @@
          
             }
 
-            onMounted(getAllRequests)
+            onMounted(()=>{ 
+                            getAllSettings()
+                            getAllRequests()
+                            
+                        })
           
             return {
                 requests,
@@ -195,7 +205,8 @@
                 updatedRequest,
                 canCommit,
                 doCommitRequests,
-                error
+                error,
+                
             }
         },
         components:{Popup,RequestFilter,RequestEdit,RequestNotes}

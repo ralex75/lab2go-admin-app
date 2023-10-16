@@ -107,10 +107,12 @@
             //abilita o disabilita pulsante di commit
             //per abilitare tutte le richieste devono essere accettate o rifiutate
             const canCommit=computed(()=>{
+              
                 if(!allowSingleFinalize.value){
+                    
                     return !requests.value.some(r=>r.status=='SUBMITTED' || r.status=='PENDING')
                 }
-                return filteredRequests.value.some(r=>r.status.indexOf("ACCEPTED")>-1)
+                return filteredRequests.value.some(r=>r.status.endsWith("ACCEPTED_INFN") || r.status.endsWith("ACCEPTED_USAP") || r.status.endsWith("REJECTED"))
                 
             })
 
@@ -192,7 +194,7 @@
                     console.log(exc)
                     return
                 }
-                r.status='REJECTED'
+                r.status='DISCARDED'
             }
 
             onMounted(()=>{ 

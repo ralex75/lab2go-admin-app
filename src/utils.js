@@ -6,9 +6,13 @@ const statusMap={
     "ACCEPTED_INFN":"SOTTOMESSA", // finchè non si finalizza il docente vedrà sempre sottomessa per stato accepted
     "ACCEPTED_USAP":"SOTTOMESSA", // finchè non si finalizza il docente vedrà sempre sottomessa per stato accepted
     "REJECTED":"SOTTOMESSA", // finchè non si finalizza il docente vedrà sempre sottomessa per stato rejected
-    "ACCEPTED_INFN_COMMIT":"ACCETTATA", // stato finalizzato,
-    "ACCEPTED_USAP_COMMIT":"ACCETTATA",
-    "REJECTED_COMMIT":"RIFIUTATA",  // stato finalizzato
+    "ACCEPTED_INFN_COMMIT":"ACCETTATA", // stato finalizzato ma non notificato
+    "ACCEPTED_INFN_COMMIT_NOTIFIED":"ACCETTATA", // stato finalizzato e notificata,
+    "ACCEPTED_USAP_COMMIT":"ACCETTATA", // stato finalizzato ma non notificato
+    "ACCEPTED_USAP_COMMIT_NOIFIED":"ACCETTATA",
+    "REJECTED_COMMIT":"RIFIUTATA",  // stato finalizzato ma non notificato
+    "REJECTED_COMMIT_NOTIFIED":"RIFIUTATA",  // stato finalizzato
+    "DISCARDED":"SCARTATA" //scartata 
 }
 
 const parseZone=(meccode)=>{

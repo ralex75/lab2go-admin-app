@@ -11,12 +11,14 @@ export default function useUserAccount(){
     const getTutors=async ()=>{
         try{
            
+          
             let {data}=await axios.get("/tutors")
             tutors.value=data
         }
         catch(exc){
            
-            error.value=exc.response.data
+           
+            error.value=exc.response?.msg
         }
     }
 
@@ -41,16 +43,9 @@ export default function useUserAccount(){
     }
 
     const deleteTutor=async (tutorId)=>{
-        try{
-           
-            await axios.delete(`/tutors/${tutorId}`)
-            
-            
-        }
-        catch(exc){
-           
-            error.value=exc.response.data
-        }
+      
+        await axios.delete(`/tutors/${tutorId}`)
+       
     }
 
     

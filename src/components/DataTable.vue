@@ -22,9 +22,8 @@
                 {{ r[k] }}
             </td>
             <td v-if="hasAction" class="action">
-               
                 <input type="button" v-if="props.editCallback" @click="props.editCallback(r)" value="Modifica" class="btn btn-primary w-100">
-                <input type="button" v-if="props.deleteCallback" @click="props.deleteCallback(r)" value="Elimina" class="btn btn-danger w-100">
+                <input type="button" v-if="props.deleteCallback" :disabled="props.allowDeleteKey && !r[props.allowDeleteKey]" @click="props.deleteCallback(r)" value="Elimina" class="btn btn-danger w-100">
             </td>
         </tr>
     </tbody>
@@ -44,7 +43,8 @@ const props=defineProps({
     "editCallback":{type:Function},
     "deleteCallback":{type:Function},
     "data":{type:Array,required:true},
-    "dataKeys":{type:Array,required:true}
+    "dataKeys":{type:Array,required:true},
+    "allowDeleteKey":{type:String,required:false}
     
 })
 

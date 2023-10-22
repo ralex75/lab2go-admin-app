@@ -9,7 +9,7 @@ const statusMap={
     "ACCEPTED_INFN_COMMIT":"ACCETTATA", // stato finalizzato ma non notificato
     "ACCEPTED_INFN_COMMIT_NOTIFIED":"ACCETTATA", // stato finalizzato e notificata,
     "ACCEPTED_USAP_COMMIT":"ACCETTATA", // stato finalizzato ma non notificato
-    "ACCEPTED_USAP_COMMIT_NOIFIED":"ACCETTATA",
+    "ACCEPTED_USAP_COMMIT_NOTIFIED":"ACCETTATA",
     "REJECTED_COMMIT":"RIFIUTATA",  // stato finalizzato ma non notificato
     "REJECTED_COMMIT_NOTIFIED":"RIFIUTATA",  // stato finalizzato
     "DISCARDED":"SCARTATA" //scartata 

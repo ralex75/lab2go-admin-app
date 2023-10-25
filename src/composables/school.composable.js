@@ -28,7 +28,9 @@ export default function useSchool(){
                                         data:JSON.parse(s.school_json_data),
                                         discipline:JSON.parse(s.discipline),
                                         students:s.students,
-                                        status:s.status
+                                        status:s.status,
+                                        token:s.token
+                                        
                                     }))
     }  
     
@@ -81,9 +83,12 @@ export default function useSchool(){
         errors.value=''
         try{
             let year=new Date().getFullYear()
-            await axios.get(`/schools/confirm?code=${school.code}&year=${year}&email=${school.userEmail}`) 
+            
+            let res=await axios.get(`/schools/confirm?tk=${school.token}`) 
+            console.log(res)
         }
         catch(exc){
+            console.log(exc)
             handlingError(exc)
         }
     }

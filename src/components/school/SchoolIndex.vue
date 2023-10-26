@@ -30,22 +30,22 @@
                         <td>{{ s.data.sc_tab_indirizzo }}</td>
                         <td>{{ utils.parseZone(s.data.sc_tab_plesso_code) }}</td>
                         <td><span v-html="utils.formatDiscipline(Object.keys(s.discipline))"></span></td>
-                        <td>{{ s.status=='NOT_CONFIRMED' ? 'NON CONFERMATO' : 'CONFERMATO' }}</td>
+                        <td v-if="s.status=='CONFIRMED'">CONFERMATO</td>
+                            
+                        <td v-else><a href="#link" class="btn btn-outline-primary" @click.prevent="doConfirmSchool(s)" role="button">Conferma Partecipazione</a></td>
                         <td>
                             
                             <div class="action" v-if="isAdmin">
                                 
+                                
                                 <button type="button" :disabled="!s.students.length" class="btn btn-outline-success" v-if="isAdmin" @click.prevent="showDumpStudents(s.id)">Dump</button>
                                 <button type="button" class="btn btn-primary btn-ms" @click.prevent="showEditSchool(s.id)">Modifica</button>
                                 <router-link class="btn btn-outline-primary" :to="{ name: 'student.index', params: { 'schoolId': s.id }}">Studenti</router-link>
-                            
+
                             </div>
                             <div class="action" v-else-if="isDocente">
                                 
-                                <section v-if="s.status!='CONFIRMED'">
-                                    <a href="#link" class="btn btn-outline-primary" @click.prevent="doConfirmSchool(s)" role="button">Conferma Partecipazione</a>
-                                </section>
-                                <section v-else>
+                                <section v-if="s.status=='CONFIRMED'">
                                     <button type="button" class="btn btn-primary btn-ms" @click.prevent="showEditSchool(s.id)">Modifica</button>
                                     <router-link class="btn btn-outline-primary" :to="{ name: 'student.index', params: { 'schoolId': s.id }}">Studenti</router-link>
                                 </section> 

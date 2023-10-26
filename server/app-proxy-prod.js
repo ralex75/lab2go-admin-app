@@ -7,7 +7,10 @@ const PORT=3000 //DEFAULT LISTENING PORT
 app.use(express.static('dist'))
 
 app.use('/api', createProxyMiddleware({ target: 'http://172.18.0.20:3000', changeOrigin: true }));
-
+//TRICK per cazzata nella formattazione URL. Formattazione che è stata corretta
+    //ma per le mail già mandate questo handler serve.
+app.use('//api', createProxyMiddleware({ target: 'http://172.18.0.20:3000', changeOrigin: true }));
+    
 app.use(history())
 
 app.get("/",(req,res)=>{

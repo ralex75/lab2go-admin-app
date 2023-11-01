@@ -11,7 +11,7 @@
            <th v-for="k of props.colHeaderKeys">
                 {{ k }}
            </th>
-           <th v-if="hasAction">
+           <th v-if="props.addCallback">
                 <input type="button" class="btn btn-success w-100" value="Aggiungi" @click="props.addCallback">
             </th>
         </tr>

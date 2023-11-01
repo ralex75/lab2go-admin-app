@@ -23,7 +23,7 @@
             <div class="form-group row mt-1" >
                 <label for="email" class="col-sm-2 col-form-label">*Email</label>
                 <div class="col-sm-10">
-                    <input type="text" name="email" class="form-control" id="email" required :pattern="pattern.email" v-model="form.email" placeholder="Email studente">
+                    <input type="text" name="email" class="form-control" id="email" required pattern="[a-z0-9._%+\-]+@[a-z0-9.\-]+\.[a-z]{2,}$"  v-model="form.email" placeholder="Email studente">
                     <div :class="{'invalid-feedback':errors.email}">
                         {{ errors.email }}
                     </div>
@@ -34,11 +34,10 @@
             <div class="form-group row mt-1" >
                 <label for="disciplina" class="col-sm-2 col-form-label">Disciplina</label>
                 <div class="col-sm-10">
-                    <select class="form-select" required aria-label="Default select example" v-model="form.disciplina">
-                        <option selected value="" v-if="discipline?.length>0 && !form.disciplina">Seleziona disciplina</option>
-                        <option v-for="d in discipline" :value="d">{{ d }}</option>
-                    </select>
-                    <div v-if="!form.disciplina" :class="{'invalid-feedback':!form.disciplina}">
+                    
+                    <DisciplinaList ref="disciList" v-if="school.discipline" :discipline="school.discipline"></DisciplinaList>
+                    
+                    <div v-if="!selectedDisciplina" :class="{'invalid-feedback':!selectedDisciplina}">
                         Disciplina non selezionata
                     </div>
                 </div>
@@ -58,8 +57,9 @@
 
 <script setup>
 
-import { reactive,computed,ref } from 'vue';
+import { computed, reactive,ref } from 'vue';
 import useStudent from '@/composables/student.composable';
+import DisciplinaList from '../DisciplinaList.vue';
 
 const {storeStudent,error}=useStudent()
 
@@ -68,15 +68,7 @@ const props=defineProps({
 })
 
 const emits=defineEmits(["storedStudent"])
-
-const discipline=computed(()=>{
-    let discipline=props.school.discipline ? JSON.parse(props.school.discipline) : []
-    if(discipline?.length==1)
-    {
-        //form.disciplina=discipline[0]
-    }
-    return discipline
-})
+const disciList=ref(null)
 
 const form=reactive({
     name:"",
@@ -93,45 +85,49 @@ const errors=reactive({
 
 const pattern={
     alpha:"[a-zA-Z\\s]+",
-    email:"[\\w-\.]+@([\\w-]+\.)+[\\w-]{2,4}"
+    email:"[\\w\-\.]+@([\\w-]+\.)+[\\w-]{2,4}"
 }
 
 const formValidated=ref(false)
 
+const selectedDisciplina=computed(()=>{
+    return disciList.value?.selectedDisciplina
+})
+
 const formIsValid=async ()=>{
 
-    const required=(value)=>{
-        return value!="" 
+    formValidated.value=false
+    errors.name=errors.surname=errors.email=""
+
+    if(!form.name){
+        errors.name="Il nome è richiesto"
     }
-    
-    
-    const validations={"name":[required,new RegExp(pattern.alpha)],
-                        "surname": [required,new RegExp(pattern.alpha)],
-                        "email":[required,new RegExp(pattern.email)]
+    if(!form.surname){
+        errors.surname="Il cognome è richiesto"
     }
 
-
-    Object.keys(errors).forEach(k=>{
-        validations[k].forEach(fn=>{
-            errors[k]=""
-            let res=(fn['test'] ? fn.test(form[k]) : fn(form[k]))
-            if(!res){
-                errors[k]="Valore non valido"
-            }
-        })
-    })
+    
+    if(!form.email || !new RegExp(pattern.email).test(form.email)){
+        errors.email="Il campo email non è valido"
+    }
+    
 
     formValidated.value=true
 
-    return !errors.name && !errors.surname && !errors.email && form.disciplina
+    
+    return !errors.name && !errors.surname && !errors.email && selectedDisciplina
 }
 
 const doSave=async ()=>{
     if(!await formIsValid())
     {
+        console.log("Form is Invalid")
         return
     }
 
+    
+    form.disciplina=selectedDisciplina.value
+   
     storeStudent(props.school.id,form).then(_=>{
         emits("storedStudent")
         Object.keys(form).forEach(k=>form[k]="")

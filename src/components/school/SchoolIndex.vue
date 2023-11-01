@@ -11,7 +11,13 @@
                     Non ci sono scuole ammesse al momento per l'anno corrente.
                 </div>
             </div>
-            <table class="table" v-else>
+            <div v-else>
+                <div class="col-4" style="margin: 10px 0;">
+                    <label>Ricerca</label>
+                    <input type="text" class="form-control" v-model="term" @input="applyFilter()" placeholder="ricerca...">
+                </div>    
+           
+            <table class="table" >
                 <thead>
                     <tr>
                         <th>Nome</th>
@@ -25,7 +31,7 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr class="info" v-for="s in schools" :key="s.id">
+                    <tr class="info" v-for="s in filteredSchools" :key="s.id">
                         <td>{{ s.data.sc_tab_plesso }}</td>
                         <td>{{ s.data.sc_tab_indirizzo }}</td>
                         <td>{{ utils.parseZone(s.data.sc_tab_plesso_code) }}</td>
@@ -56,6 +62,7 @@
                     </tr>
                 </tbody>
             </table>
+            </div>
         </div>
 
 </template>
@@ -63,7 +70,7 @@
 
 <script setup>
 
-    import {onMounted,ref} from 'vue'
+    import {onMounted,ref,computed} from 'vue'
     
     import useSchool from '@/composables/school.composable';
     import roles from '@/roles';
@@ -78,7 +85,14 @@
     
     const selectedSchoolId=ref(null)
     const show=ref("")
-    onMounted(getSchools);
+
+    const filteredSchools=ref([])
+    const term=ref("")
+    onMounted(()=>{
+        getSchools().then(_=>{
+                filteredSchools.value=schools.value
+            })
+    });
         
     const showEditSchool=(id)=>{
         show.value='school'
@@ -96,6 +110,9 @@
         selectedSchoolId.value=id
     }
 
+    const applyFilter=()=>{
+        filteredSchools.value=schools.value.filter(v=>JSON.stringify(v).toLowerCase().indexOf(term.value.toLowerCase())>-1)
+    }
   
 </script>
 

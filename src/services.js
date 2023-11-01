@@ -7,7 +7,7 @@ const BASE_URL={"DEV":'/api',"PROD":'/lab2go/admin/api',"DEBUG":'/lab2go/debug/a
 
 // FOR PRODUCTION
 const instance=axios.create({
-  baseURL:BASE_URL.PROD,
+  baseURL:BASE_URL.DEV,
   timeout: 1000,
   withCredentials:true
 });
@@ -17,14 +17,15 @@ instance.interceptors.response.use((response) => response,
 (error) => {
   
   
-  if (error.response && error.response.data) {
+  if (error.response && !error.response.data.msg) {
       
       storage.unset("session")
       router.push({name:'login.index'})
       return Promise.reject(error.response.data);
+
   }
   
-  return Promise.reject(error.message);
+  return Promise.reject(error.response.data.msg);
    
 });
 

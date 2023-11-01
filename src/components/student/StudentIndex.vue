@@ -1,18 +1,27 @@
 <template>
     <div class="block-container">
             
-            <ul>
+            <!--<ul>
                 <li v-for="sy in schoolYears" :key="sy.id" style="margin-bottom: 6px;">
                     <router-link class="btn" :class="{'btn-success':route.params.schoolId==sy.id }" :to="{ name: 'student.index', params: { 'schoolId': sy.id }}">Studenti per anno: {{ sy.year }}</router-link>
                     <input type="button" style="margin-left: 10px;"  v-if="sy.year==2023" class="btn btn-outline-primary" value="Aggiungi studente" @click.prevent="showPopup=true;showFileBrowser=false"/>
                     <input type="button" style="margin-left: 10px;" v-if="sy.year==2023" class="btn btn-outline-primary" value="Aggiungi studenti da file" @click.prevent="showPopup=true;showFileBrowser=true"/>
                 </li>
-            </ul>
+            </ul>-->
+            
+            <input type="button" style="margin-left: 10px;" class="btn btn-outline-primary" value="Aggiungi studente" @click.prevent="showPopup=true;showFileBrowser=false"/>
+            <input type="button" style="margin-left: 10px;" class="btn btn-outline-primary" value="Aggiungi studenti da file" @click.prevent="showPopup=true;showFileBrowser=true"/>
             
           
             <div class="row d-flex justify-content-center" v-if="students.length==0">
                 <div class="col-md-6 alert alert-info text-center" role="alert" > 
                     Non ci sono studenti per l'anno: {{ currentYear }}
+                </div>
+            </div>
+           
+            <div class="row d-flex justify-content-center" v-if="error">
+                <div class="col-md-6 alert alert-danger text-center" role="alert" > 
+                    {{ error }}
                 </div>
             </div>
             
@@ -41,6 +50,7 @@ import StudentUpload from './StudentUpload.vue'
 import { useRoute } from "vue-router"
 
 
+
 export default {
     props: {
         schoolId: {
@@ -50,7 +60,7 @@ export default {
     },
     setup(props) {
 
-        const { errors, students, getStudents, destroyStudent } = useStudent();
+        const { errors, students, getStudents, destroyStudent, error } = useStudent();
         const { getSchoolPartecipationYears, schoolYears,getSchool,school} = useSchool();
         const showPopup   = ref(false);
         const showFileBrowser=ref(false)
@@ -60,7 +70,7 @@ export default {
         onMounted(async () => {
             getSchool(props.schoolId)
             getStudents(props.schoolId)
-            getSchoolPartecipationYears(props.schoolId)
+            //getSchoolPartecipationYears(props.schoolId)
         });
 
         watch(route, (to) => {
@@ -119,6 +129,7 @@ export default {
 
         return {
             props,
+            error,
             showPopup,
             currentYear,
             closePopup,

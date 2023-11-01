@@ -1,13 +1,18 @@
 <template>
         <div class="container-md" style="width:600px">
             <h3 class="text-center">Carica lista studenti</h3>
+
+            <div class="row d-flex justify-content-center" v-if="error">
+                <div class="col-md-6 alert alert-danger text-center" role="alert" > 
+                    {{ error }}
+                </div>
+            </div>
+
             <div class="form-group mb-2" >
                 <label for="disciplina" class="form-label mb-0">Disciplina</label>
                 
-                    <select class="form-select" required aria-label="Default select example" v-model="form.disciplina">
-                        <option selected value="" v-if="discipline?.length>0 && !form.disciplina">Seleziona disciplina</option>
-                        <option v-for="d in discipline" :value="d">{{ d }}</option>
-                    </select>
+                <DisciplinaList ref="disciList" v-if="school.discipline" :discipline="school.discipline"></DisciplinaList>
+                   
                  
             </div>
             <div class="form-group mb-4">
@@ -27,6 +32,7 @@
 <script setup>
 import { reactive,computed,ref,onMounted } from 'vue';
 import useStudent from '@/composables/student.composable'
+import DisciplinaList from '../DisciplinaList.vue';
 
 const upload=ref(null)
 
@@ -42,7 +48,7 @@ const{uploadStudentsList,error} = useStudent()
 
 const isDisabled=computed(()=>{
     
-    return !form.file || !form.disciplina
+    return !form.file || !selectedDisciplina.value
 })
 
 const handleFileUpload=async(event)=>{
@@ -53,19 +59,25 @@ const handleFileUpload=async(event)=>{
 }
 
 onMounted(() => {
-    debugger
+    
     let i=upload.value
 })
 
-const discipline=computed(()=>{
-    return JSON.parse(props.school.discipline)
+const disciList=ref(null)
+
+const selectedDisciplina=computed(()=>{
+    return disciList.value?.selectedDisciplina
 })
+
+
 
 const doUpload = async () => {
 
             try {
                 //working.value = true;
                 
+                form.disciplina=selectedDisciplina.value
+               
                 await uploadStudentsList(form, props.school.id);
                 emit('storedStudent')    
             }

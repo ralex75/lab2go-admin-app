@@ -33,7 +33,7 @@ import moment from 'moment'
 
 const { dumpStudents } = useUtils()
 const props=defineProps({"schoolId":{type:Number,required:true}})
-const ddump=reactive({"status":"ALL",'sdate':moment().format("YYYY-MM-DD")})
+const ddump=reactive({"status":"ALL",'sdate':moment().format("YYYY")-1})
 
 const schools=computed(()=>{
     return !props.schoolId ? "Tutte" : "Singola"
